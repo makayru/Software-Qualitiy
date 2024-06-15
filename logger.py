@@ -8,6 +8,9 @@ class LoggerDatabaseManager:
         self.init_db()
         self.current_user = None
 
+    def set_current_user(self, username):
+        self.current_user = username
+
     def init_db(self):
         conn = sqlite3.connect(self.db_name)
         c = conn.cursor()
@@ -22,7 +25,8 @@ class LoggerDatabaseManager:
         conn.commit()
         conn.close()
 
-    def log_activity(self, username, activity, additional_info=''):
+    def log_activity(self, activity, additional_info=''):
+        username = self.current_user
         suspicious = self.is_suspicious_activity(username, activity)
         now = datetime.datetime.now()
         query = '''INSERT INTO logs (date, time, username, activity, additional_info, suspicious) 
