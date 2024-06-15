@@ -1,4 +1,6 @@
 import sqlite3
+import datetime
+import os
 
 class UserManager:
     def __init__(self):
@@ -13,6 +15,21 @@ class UserManager:
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             role TEXT NOT NULL
+        )
+        ''')
+        
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS members (
+            id INTEGER PRIMARY KEY,
+            member_id INTEGER NOT NULL,
+            firstname TEXT NOT NULL,
+            lastname TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            gender TEXT NOT NULL,
+            weight INTEGER NOT NULL,
+            address TEXT NOT NULL,
+            email TEXT NOT NULL,
+            phone TEXT NOT NULL
         )
         ''')
         self.conn.commit()
@@ -62,6 +79,34 @@ class UserManager:
                 print(f"Account {username} with role {role} inserted successfully.")
             else:
                 print(f"Account {username} already exists.")
+                
+    def generate_membership_id(self):
+        year = str(datetime.datetime.now().year)[2:]
+        random_digits = ''.join([str(os.urandom(1)[0] % 10) for _ in range(7)])
+        partial_id = year + random_digits
+        checksum = sum(int(digit) for digit in partial_id) % 10
+        membership_id = partial_id + str(checksum)
+        return membership_id
+    
+    def register_member(self):
+        member_id = self.generate_membership_id()
+        firstname = input("Enter first name: ")
+        lastname = input("Enter last name: ")
+        age = int(input("Enter age: "))
+        gender = input("Enter gender: ")
+        weight = int(input("Enter weight: "))
+        address = input("Enter address: ")
+        email = input("Enter email: ")
+        phone = input("Enter phone: ")
+        
+        sql = 'INSERT INTO members (member_id ,firstname, lastname, gender, age, weight, address, email, phone) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)'
+        try:
+            self.cursor.execute(sql,   (member_id, firstname, lastname, age, gender, weight, address, email, phone))
+            self.conn.commit()
+            print(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id}")
+        except sqlite3.IntegrityError:
+            print("Error: Member already exists.")
+       
 
     def close(self):
         self.conn.close()
