@@ -3,14 +3,16 @@ from menus import super_admin_menu, system_admin_menu, consultant_menu, default_
 import os
 
 class MenuHandler:
-    def __init__(self, user_manager, member_manager):
+    def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager):
         self.user_manager = user_manager
         self.member_manager = member_manager
+        self.consultant_manager = consultant_manager
+        self.systemadmin_manager = systemadmin_manager
 
     def display_role_based_menu(self, role):
         if role == 'Super_Administrator':
             self.super_admin_menu()
-        elif role == 'System_Admin':
+        elif role == 'SystemAdmin':
             self.system_admin_menu()
         elif role == 'Consultant':
             self.consultant_menu()
@@ -27,9 +29,9 @@ class MenuHandler:
                 print("What role do you want to assign to the new user? \n 1. Consultant \n 2. System Admin \n 3. Member")
                 role = input("Choose an option: ")
                 if role == '1':
-                    print("Registering new Consultant (feature to be implemented)")
+                    self.consultant_manager.register_consultant()
                 elif role == '2':
-                    print("Registering new System Admin (feature to be implemented)")
+                    self.systemadmin_manager.register_SA()
                 elif role == '3':
                     self.member_manager.register_member()
                 else:
@@ -63,7 +65,15 @@ class MenuHandler:
             elif option == '2':
                 print("Viewing users (feature to be implemented)")
             elif option == '3':
-                print("Adding user (feature to be implemented)")
+                print("What role do you want to assign to the new user? \n 1. Consultant \n 2. Member")
+                role = input("Choose an option: ")
+                if role == '1':
+                    self.consultant_manager.register_consultant()
+                elif role == '2':
+                    self.member_manager.register_member()
+                else:
+                    print("Invalid choice. Please try again.")
+                
             elif option == '4':
                 print("Edit user (feature to be implemented)")
             elif option == '5':
@@ -88,7 +98,7 @@ class MenuHandler:
             if option == '1':
                 print("Updating password (feature to be implemented)")
             elif option == '2':
-                print("Adding member (feature to be implemented)")
+                self.member_manager.register_member()
             elif option == '3':
                 print("Editing member (feature to be implemented)")
             elif option == '4':

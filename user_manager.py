@@ -34,21 +34,30 @@ class UserManager:
             phone TEXT NOT NULL
         )
         ''')
+        
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS consultants (
+            id INTEGER PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+        ''')
+        
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS system_admins (
+            id INTEGER PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+        ''')
         self.conn.commit()
+        
+        
 
         # Insert default accounts if they do not exist
         self.insert_default_accounts()
-
-    def register_user(self, username, password, role):
-        try:
-            self.cursor.execute('INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-                                (username, password, role))
-            self.conn.commit()
-            print(f"User {username} registered successfully.")
-            self.logger.log_activity(username, "register user", "Successful")
-        except sqlite3.IntegrityError:
-            print("Error: Username already exists.")
-            self.logger.log_activity(username, "register user", "Failed: Username already exists")
 
     def authenticate_user(self, username, password):
         sql = 'SELECT password, role FROM users WHERE username = ?'
@@ -58,23 +67,21 @@ class UserManager:
             stored_password, role = user
             if stored_password == password:
                 print(f"Authentication successful. Role: {role}")
-                self.logger.log_activity(username, 'login attempt', 'Successful')
+                self.logger.log_activity('login attempt', 'Successful')
                 return role
             else:
                 print("Authentication failed. Incorrect password.")
-                self.logger.log_activity(username, 'login attempt', 'Failed: Incorrect password')
+                self.logger.log_activity('login attempt', 'Failed: Incorrect password')
                 return None
         else:
             print("Authentication failed. User not found.")
-            self.logger.log_activity(username, 'login attempt', 'Failed: User not found')
+            self.logger.log_activity('login attempt', 'Failed: User not found')
             return None
 
     def insert_default_accounts(self):
         """Insert default accounts with predefined credentials if they do not exist."""
         default_accounts = [
             ("super_admin", "Admin_123?", "Super_Administrator"),
-            ("system_admin", "SysAdmin_123?", "System_Admin"),
-            ("consultant", "Consultant_123?", "Consultant")
         ]
 
         for username, password, role in default_accounts:
@@ -84,10 +91,10 @@ class UserManager:
                                     (username, password, role))
                 self.conn.commit()
                 print(f"Account {username} with role {role} inserted successfully.")
-                self.logger.log_activity(username, "insert default account", "Successful")
+                self.logger.log_activity("insert default account", "Successful")
             else:
                 print(f"Account {username} already exists.")
-                self.logger.log_activity(username, "insert default account", "Failed: Already exists")
+                self.logger.log_activity( "insert default account", "Failed: Already exists")
 
     def close(self):
         self.conn.close()
