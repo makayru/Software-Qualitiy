@@ -70,7 +70,7 @@ class LoggerDatabaseManager:
         return current_hour < 6 or current_hour > 18
 
 # Example usage:
-logger = LoggerDatabaseManager()
+#logger = LoggerDatabaseManager()
 # Logging activities
-logger.log_activity('john_m_05', 'Logged in')
-logger.log_activity('superadmin', 'New admin user is created')
+#logger.log_activity('john_m_05', 'Logged in')
+#logger.log_activity('superadmin', 'New admin user is created')
