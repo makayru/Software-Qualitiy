@@ -87,6 +87,10 @@ def validate_and_get_unique_username(prompt):
                 print("Invalid Username:")
                 for error in errors:
                     print(error)
+                    
+        errors.clear()
+    
+        
 
 def validate_password_input(prompt):
     while True:
