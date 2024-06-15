@@ -1,5 +1,7 @@
 import re
+import sqlite3
 import member_manager as MemberManager
+
 cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
 def get_valid_int_input(prompt):
         while True:
@@ -47,3 +49,35 @@ def get_valid_city_input(prompt):
                 print(f"Invalid selection. Please enter a number between 1 and {len(cities)}.")
         except ValueError:
             print("Invalid input. Please enter a valid number.")
+
+def connect_db():
+    conn = sqlite3.connect('unique_meal.db')
+    return conn
+
+def is_valid_username(username):
+    if len(username) < 8 or len(username) > 10:
+        return False, "Username must be between 8 and 10 characters"
+    if not re.match(r'^[a-zA-Z_][a-zA-Z0-9\'._]*$', username):
+        return False, "Username can only start with a letter or underscore, and can contain letters, numbers, underscores, apostrophes, and periods"
+    return True, ""
+
+def is_unique_username(username):
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM members WHERE username = ?", (username,))
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count == 0
+
+def is_valid_password(password):
+    if len(password) < 12 or len(password) > 30:
+        return False, "Password must be between 12 and 30 characters"
+    if not re.search(r'[a-z]', password):
+        return False, "Password must contain at least one lowercase letter"
+    if not re.search(r'[A-Z]', password):
+        return False, "Password must contain at least one uppercase letter"
+    if not re.search(r'\d', password):
+        return False, "Password must contain at least one digit"
+    if not re.search(r'[~!@#$%&_\-=+`|\\(){}[\]:;\'<>,.?/]', password):
+        return False, "Password must contain at least one special character"
+    return True, ""
