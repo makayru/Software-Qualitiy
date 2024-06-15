@@ -3,9 +3,11 @@ from member_manager import MemberManager
 from getpass import getpass
 from menus import main_menu
 from menu_handler import MenuHandler
+from logger import LoggerDatabaseManager
 
 class Application:
     def __init__(self):
+        self.logger = LoggerDatabaseManager()
         self.user_manager = UserManager()
         self.member_manager = MemberManager()
         self.menu_handler = MenuHandler(self.user_manager, self.member_manager)
