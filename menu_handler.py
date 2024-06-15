@@ -23,7 +23,19 @@ class MenuHandler:
             if option == '1':
                 print("Viewing all users (feature to be implemented)")
             elif option == '2':
-                print("Registering new user (feature to be implemented)")
+                print("What role do you want to assign to the new user? \n 1. Consultant \n 2. System Admin \n 3. Member")
+                role = input("Choose an option: ")
+                if role == '1':
+                    print("Registering new Consultant (feature to be implemented)")
+                elif role == '2':
+                    print("Registering new System Admin (feature to be implemented)")
+                elif role == '3':
+                    self.user_manager.register_member()
+                else:
+                    print("Invalid choice. Please try again.")
+                    
+                
+                
             elif option == '3':
                 print("Editing user (feature to be implemented)")
             elif option == '4':
