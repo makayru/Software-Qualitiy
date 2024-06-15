@@ -14,8 +14,8 @@ class MemberManager:
 
     def register_member(self):
         member_id = self.generate_membership_id()
-        firstname = input("Enter first name: ")
-        lastname = input("Enter last name: ")
+        firstname = InputChecker.validate_fname_or_lname_input("Enter first name: ")
+        lastname = InputChecker.validate_fname_or_lname_input("Enter last name: ")
         age = InputChecker.get_valid_int_input("Enter age: ")
         gender = InputChecker.get_valid_gender_input("Enter gender (M/F): ")
         weight = InputChecker.get_valid_int_input("Enter weight: ")
