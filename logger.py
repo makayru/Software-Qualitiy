@@ -1,3 +1,4 @@
+# logger.py
 import sqlite3
 import datetime
 
@@ -5,6 +6,7 @@ class LoggerDatabaseManager:
     def __init__(self, db_name='logs.db'):
         self.db_name = db_name
         self.init_db()
+        self.current_user = None
 
     def init_db(self):
         conn = sqlite3.connect(self.db_name)
@@ -20,15 +22,13 @@ class LoggerDatabaseManager:
         conn.commit()
         conn.close()
 
-
     def log_activity(self, username, activity, additional_info=''):
-            suspicious = self.is_suspicious_activity(username, activity)
-            now = datetime.datetime.now()
-            query = '''INSERT INTO logs (date, time, username, activity, additional_info, suspicious) 
-                    VALUES (?, ?, ?, ?, ?, ?)'''
-            params = (now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), username, activity, additional_info, suspicious)
-            self.execute_query(query, params)
-
+        suspicious = self.is_suspicious_activity(username, activity)
+        now = datetime.datetime.now()
+        query = '''INSERT INTO logs (date, time, username, activity, additional_info, suspicious) 
+                   VALUES (?, ?, ?, ?, ?, ?)'''
+        params = (now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), username, activity, additional_info, suspicious)
+        self.execute_query(query, params)
 
     def execute_query(self, query, params):
         conn = sqlite3.connect(self.db_name)
@@ -70,9 +70,3 @@ class LoggerDatabaseManager:
         # Mock function to check if the current time is outside normal hours
         current_hour = datetime.datetime.now().hour
         return current_hour < 6 or current_hour > 18
-
-# Example usage:
-#logger = LoggerDatabaseManager()
-# Logging activities with additional information
-#logger.log_activity('john_m_05', 'Logged in', 'IP: 192.168.1.10')
-#logger.log_activity('superadmin', 'New admin user is created', 'Role: Administrator')

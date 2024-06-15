@@ -1,3 +1,4 @@
+# main.py
 from user_manager import UserManager
 from member_manager import MemberManager
 from getpass import getpass
@@ -8,8 +9,8 @@ from logger import LoggerDatabaseManager
 class Application:
     def __init__(self):
         self.logger = LoggerDatabaseManager()
-        self.user_manager = UserManager()
-        self.member_manager = MemberManager()
+        self.user_manager = UserManager(self.logger)
+        self.member_manager = MemberManager(self.logger)
         self.menu_handler = MenuHandler(self.user_manager, self.member_manager)
 
     def run(self):
