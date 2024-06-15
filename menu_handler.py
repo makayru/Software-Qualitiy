@@ -3,8 +3,9 @@ from menus import super_admin_menu, system_admin_menu, consultant_menu, default_
 import os
 
 class MenuHandler:
-    def __init__(self, user_manager):
+    def __init__(self, user_manager, member_manager):
         self.user_manager = user_manager
+        self.member_manager = member_manager
 
     def display_role_based_menu(self, role):
         if role == 'Super_Administrator':
@@ -30,7 +31,7 @@ class MenuHandler:
                 elif role == '2':
                     print("Registering new System Admin (feature to be implemented)")
                 elif role == '3':
-                    self.user_manager.register_member()
+                    self.member_manager.register_member()
                 else:
                     print("Invalid choice. Please try again.")
                     
