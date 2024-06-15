@@ -55,5 +55,30 @@ class MemberManager:
         checksum = sum(int(digit) for digit in partial_id) % 10
         membership_id = partial_id + str(checksum)
         return membership_id
+    
+    def search_members(self, search_key):
+        search_key = f"%{search_key}%"
+        sql = '''SELECT member_id, firstname, lastname, age, gender, weight, address, email, phone 
+                 FROM members 
+                 WHERE member_id LIKE ? 
+                 OR firstname LIKE ? 
+                 OR lastname LIKE ? 
+                 OR address LIKE ? 
+                 OR email LIKE ? 
+                 OR phone LIKE ?'''
+        self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key, search_key))
+        results = self.cursor.fetchall()
+
+        if results:
+            print("Search Results:")
+            for row in results:
+                member_id, firstname, lastname, age, gender, weight, address, email, phone = row
+                print(f"ID: {member_id}, Name: {firstname} {lastname}")
+        else:
+            print("No matching members found.")
+            
+        input("Press any key to continue...")  # Wait for key press
+        os.system('cls' if os.name == 'nt' else 'clear') 
+        
 
 
