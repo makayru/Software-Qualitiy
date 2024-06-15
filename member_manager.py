@@ -11,7 +11,6 @@ class MemberManager:
         self.cursor = self.conn.cursor()
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
         self.log_manager = log_manager
-        self.current_user = log_manager.current_user
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
 
     def register_member(self):
@@ -30,10 +29,10 @@ class MemberManager:
             self.cursor.execute(sql, (member_id, firstname, lastname, gender, age, weight, address, email, phone))
             self.conn.commit()
             print(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id}")
-            self.log_manager.log_activity(self.current_user, f"Registered member {firstname} {lastname}", "Successful")
+            self.log_manager.log_activity(f"Registered member {firstname} {lastname}", "Successful")
         except sqlite3.IntegrityError:
             print("Error: Member already exists.")
-            self.log_manager.log_activity(self.current_user, f"Failed to register member {firstname} {lastname}", "IntegrityError")
+            self.log_manager.log_activity("Failed to register member {firstname} {lastname}", "IntegrityError")
 
     def address_input(self):
         street_name = input("Enter street name: ")
@@ -57,6 +56,4 @@ class MemberManager:
         membership_id = partial_id + str(checksum)
         return membership_id
 
-    def manage_members(self, current_user):
-        # Add methods to manage members here
-        pass
+
