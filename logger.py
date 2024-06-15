@@ -15,18 +15,20 @@ class LoggerDatabaseManager:
                         time TEXT,
                         username TEXT,
                         activity TEXT,
-                        suspicious TEXT
-                    )''')
+                        additional_info TEXT,
+                        suspicious TEXT)''')
         conn.commit()
         conn.close()
 
-    def log_activity(self, username, activity):
-        suspicious = self.is_suspicious_activity(username, activity)
-        now = datetime.datetime.now()
-        query = '''INSERT INTO logs (date, time, username, activity, suspicious) 
-                   VALUES (?, ?, ?, ?, ?)'''
-        self.execute_query(query, 
-                           (now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), username, activity, suspicious))
+
+    def log_activity(self, username, activity, additional_info=''):
+            suspicious = self.is_suspicious_activity(username, activity)
+            now = datetime.datetime.now()
+            query = '''INSERT INTO logs (date, time, username, activity, additional_info, suspicious) 
+                    VALUES (?, ?, ?, ?, ?, ?)'''
+            params = (now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), username, activity, additional_info, suspicious)
+            self.execute_query(query, params)
+
 
     def execute_query(self, query, params):
         conn = sqlite3.connect(self.db_name)
@@ -71,6 +73,6 @@ class LoggerDatabaseManager:
 
 # Example usage:
 #logger = LoggerDatabaseManager()
-# Logging activities
-#logger.log_activity('john_m_05', 'Logged in')
-#logger.log_activity('superadmin', 'New admin user is created')
+# Logging activities with additional information
+#logger.log_activity('john_m_05', 'Logged in', 'IP: 192.168.1.10')
+#logger.log_activity('superadmin', 'New admin user is created', 'Role: Administrator')
