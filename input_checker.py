@@ -4,6 +4,7 @@ import random
 import string
 
 import member_manager as MemberManager
+from encryption import RSAEncryption
 
 cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
 def get_valid_int_input(prompt):
@@ -115,7 +116,8 @@ def validate_password_input(prompt):
             errors.append("Password must contain at least one special character.")
 
         if not errors:
-            return password
+            return RSAEncryption().hash_data(password)
+            
         else:
             print("Invalid Password:")
             for error in errors:
