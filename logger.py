@@ -42,6 +42,11 @@ class LoggerDatabaseManager:
         conn.commit()
         conn.close()
 
+    def is_suspicious_activity(self, username, activity):
+        return 'No'
+
+
+    
     def format_logs(self, logs):
         formatted_logs = []
         print()
