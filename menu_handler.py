@@ -3,11 +3,12 @@ from menus import super_admin_menu, system_admin_menu, consultant_menu, default_
 import os
 
 class MenuHandler:
-    def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager):
+    def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager, super_admin_manager):
         self.user_manager = user_manager
         self.member_manager = member_manager
         self.consultant_manager = consultant_manager
         self.systemadmin_manager = systemadmin_manager
+        self.super_admin_manager = super_admin_manager
 
     def display_role_based_menu(self, role):
         if role == 'Super_Administrator':
@@ -24,9 +25,9 @@ class MenuHandler:
             os.system('cls')
             option = super_admin_menu()
             if option == '1':
-                print("Updating password (feature to be implemented)")
+                self.super_admin_manager.update_password()
             elif option == '2':
-                print("Viewing users (feature to be implemented)")
+                self.super_admin_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
@@ -42,9 +43,10 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        print("Deleting member (feature to be implemented)")
+                        self.member_manager.remove_member()
                     elif option == '4':
-                        self.member_manager.view_members()
+                        search_key = input("Enter search key: ")
+                        self.member_manager.search_members(search_key)
                     elif option == '5':
                         break
                     else:
@@ -61,7 +63,7 @@ class MenuHandler:
                     print("5.   Back")
                     option = input("Choose an option: ")
                     if option == '1':
-                        self.consultant_manager.register_consultant()
+                        self.systemadmin_manager.register_consultant()
                     elif option == '2':
                         print("Editing consultant (feature to be implemented)")
                     elif option == '3':
@@ -155,9 +157,9 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        self.systemadmin_manager.edit_consultant()
+                        self.systemadmin_manager.edit_user("consultant")
                     elif option == '3':
-                        self.systemadmin_manager.remove_consultant()
+                        self.systemadmin_manager.remove_user("consultant")
                     elif option == '4':
                         self.systemadmin_manager.temporary_password()
                     elif option == '5':

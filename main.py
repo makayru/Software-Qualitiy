@@ -3,6 +3,7 @@ from user_manager import UserManager
 from member_manager import MemberManager
 from consultant_manager import ConsultantManager
 from systemadmin_manager import SystemAdminManager
+from superadmin_manager import SuperAdminManager
 from getpass import getpass
 from menus import main_menu
 from menu_handler import MenuHandler
@@ -16,7 +17,8 @@ class Application:
         self.member_manager = MemberManager(self.logger)
         self.consultant_manager = ConsultantManager(self.logger)
         self.systemadmin_manager = SystemAdminManager(self.logger)
-        self.menu_handler = MenuHandler(self.user_manager, self.member_manager, self.consultant_manager, self.systemadmin_manager)
+        self.superadmin_manager = SuperAdminManager(self.logger)
+        self.menu_handler = MenuHandler(self.user_manager, self.member_manager, self.consultant_manager, self.systemadmin_manager, self.superadmin_manager)
         self.max_login_attempts = 3
         self.wait_time_seconds = 10
         self.failed_attempts = 0
