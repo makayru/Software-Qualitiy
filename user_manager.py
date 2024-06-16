@@ -5,6 +5,7 @@ import logger as log
 import os
 import zipfile
 from encryption import RSAEncryption
+import shutil
 
 class UserManager:
     def __init__(self, logger):
@@ -67,9 +68,6 @@ class UserManager:
         ''')
         self.conn.commit()
         
-        
-
-        # Insert default accounts if they do not exist
         self.insert_default_accounts()
 
     def authenticate_user(self, username, password):
@@ -123,6 +121,61 @@ class UserManager:
             backup_zip.write('logs.db')
 
         self.logger.log_activity(f"Created backup_{timestamp}.zip", "Successful")
+        
+    def list_backup_files(self):
+        backup_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backups')
+        
+        backup_files = [f for f in os.listdir(backup_dir) if f.endswith('.zip')]
+        
+        if not backup_files:
+            print("No backup ZIP files found in the 'backups' directory.")
+            return None
+        
+        print("Available backup files:")
+        for i, backup_file in enumerate(backup_files, start=1):
+            print(f"{i}. {backup_file}")
+        
+        while True:
+            try:
+                choice = int(input("Enter the number of the backup file to restore: "))
+                if 1 <= choice <= len(backup_files):
+                    selected_backup = backup_files[choice - 1]
+                    return os.path.join(backup_dir, selected_backup)
+                else:
+                    print("Invalid choice. Please enter a number within the range.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+    def restore_backup(self):
+        backup_file = self.list_backup_files()
+        if not backup_file:
+            return
+        
+        main_directory = os.path.dirname(os.path.abspath(__file__))
+        db_file = os.path.join(main_directory, 'unique_meal.db')
+        
+        try:
+            connection = sqlite3.connect(db_file)
+            cursor = connection.cursor()
+            with zipfile.ZipFile(backup_file, 'r') as backup_zip:
+                for file_info in backup_zip.infolist():
+                    if file_info.filename.endswith('.sql'):
+                        with backup_zip.open(file_info) as sql_file:
+                            sql_statements = sql_file.read().decode('utf-8')
+                            cursor.executescript(sql_statements)
+                            print(f"Executed SQL statements from {file_info.filename}")
+            connection.commit()
+            connection.close()
+            print("Database restored successfully.")
 
+        except sqlite3.Error as e:
+            print(f"SQLite error: {e}")
+        except zipfile.BadZipFile:
+            print(f"Invalid ZIP file: {backup_file}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
+    
     def close(self):
         self.conn.close()

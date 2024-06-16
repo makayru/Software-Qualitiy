@@ -1,13 +1,15 @@
 from getpass import getpass
 from menus import super_admin_menu, system_admin_menu, consultant_menu, default_menu
 import os
-
+import Display as display
+import logger as log
 class MenuHandler:
-    def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager):
+    def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager, super_admin_manager):
         self.user_manager = user_manager
         self.member_manager = member_manager
         self.consultant_manager = consultant_manager
         self.systemadmin_manager = systemadmin_manager
+        self.super_admin_manager = super_admin_manager
 
     def display_role_based_menu(self, role):
         if role == 'Super_Administrator':
@@ -24,12 +26,13 @@ class MenuHandler:
             os.system('cls')
             option = super_admin_menu()
             if option == '1':
-                print("Updating password (feature to be implemented)")
+                self.super_admin_manager.update_password()
             elif option == '2':
-                print("Viewing users (feature to be implemented)")
+                self.super_admin_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
+                    print(display.member_menu())
                     print(" Member management")
                     print("1. Add member")
                     print("2. Edit member")
@@ -42,9 +45,10 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        print("Deleting member (feature to be implemented)")
+                        self.member_manager.remove_member()
                     elif option == '4':
-                        self.member_manager.view_members()
+                        search_key = input("Enter search key: ")
+                        self.member_manager.search_members(search_key)
                     elif option == '5':
                         break
                     else:
@@ -53,6 +57,7 @@ class MenuHandler:
             elif option == '4':
                 while True:
                     self.clear_console()
+                    print(display.consultant_menu())
                     print("Consultant management")
                     print("1.   Add Consultant")
                     print("2.   Edit Consultant")
@@ -63,11 +68,11 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        print("Editing consultant (feature to be implemented)")
+                        self.systemadmin_manager.edit_user("consultant")
                     elif option == '3':
-                        print("Deleting consultant (feature to be implemented)")
+                        self.systemadmin_manager.remove_user("consultant")
                     elif option == '4':
-                        print("Resetting consultant password (feature to be implemented)")
+                        self.systemadmin_manager.temporary_password("consultant")
                     elif option == '5':
                         break
                     else:
@@ -76,6 +81,7 @@ class MenuHandler:
                 
                 while True:
                     self.clear_console()
+                    print(display.adminAscii())
                     print("System Admin management")
                     print("1.   Add System Admin")
                     print("2.   Edit System Admin")
@@ -86,11 +92,11 @@ class MenuHandler:
                     if option == '1':
                         self.systemadmin_manager.register_SA()
                     elif option == '2':
-                        print("Editing system admin (feature to be implemented)")
+                        self.super_admin_manager.edit_user("system_admin")
                     elif option == '3':
-                        print("Deleting system admin (feature to be implemented)")
+                        self.super_admin_manager.remove_user("system_admin")
                     elif option == '4':
-                        print("Resetting system admin password (feature to be implemented)")
+                        self.super_admin_manager.temporary_password("system_admin")
                     elif option == '5':
                         break
                     else:
@@ -102,13 +108,13 @@ class MenuHandler:
                 print("3. Back")
                 option = input("Choose an option: ")
                 if option == '1':
-                    self.user_manager.create_backup();
+                    self.user_manager.create_backup()
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    print('Restore backup')
                 elif option == '3':
-                    break
+                    continue
             elif option == '7':
-                print("Viewing logs (feature to be implemented)")
+                self.super_admin_manager.log_menu()
             elif option == '8':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)
@@ -129,11 +135,12 @@ class MenuHandler:
             elif option == '3':
                 while True:
                     self.clear_console()
+                    print(display.member_menu())
                     print(" Member management")
                     print("1. Add member")
                     print("2. Edit member")
                     print("3. Delete member")
-                    print("4. View members")
+                    print("4. Search members")
                     print("5. Back")
                     option = input("Choose an option: ")
                     if option == '1':
@@ -141,9 +148,10 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        self.member_manager.delete_member()
+                        self.member_manager.remove_member()
                     elif option == '4':
-                        self.member_manager.view_members()
+                        search_key = input("Enter search key: ")
+                        self.member_manager.search_members(search_key)
                     elif option == '5':
                         break
                     else:
@@ -152,6 +160,7 @@ class MenuHandler:
             elif option == '4':
                 while True:
                     self.clear_console()
+                    print(display.consultant_menu())
                     print("Consultant management")
                     print("1.   Add Consultant")
                     print("2.   Edit Consultant")
@@ -162,11 +171,11 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        print("Editing consultant (feature to be implemented)")
+                        self.systemadmin_manager.edit_user("consultant")
                     elif option == '3':
-                        print("Deleting consultant (feature to be implemented)")
+                        self.systemadmin_manager.remove_user("consultant")
                     elif option == '4':
-                        print("Resetting consultant password (feature to be implemented)")
+                        self.systemadmin_manager.temporary_password("consultant")
                     elif option == '5':
                         break
                     else:
@@ -179,11 +188,11 @@ class MenuHandler:
                 if option == '1':
                     self.user_manager.create_backup()
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    print('Restore backup')
                 elif option == '3':
-                    break
+                    continue
             elif option == '6':
-                print("Viewing logs (feature to be implemented)")
+                self.systemadmin_manager.log_menu()
             elif option == '7':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)

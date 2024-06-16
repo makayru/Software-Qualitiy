@@ -15,6 +15,7 @@ class MemberManager:
 
     def register_member(self):
         member_id = self.generate_membership_id()
+        print("\nNew member registration:")
         firstname = ic.validate_fname_or_lname_input("Enter first name: ")
         lastname = ic.validate_fname_or_lname_input("Enter last name: ")
         age = ic.get_valid_int_input("Enter age: ")
@@ -28,18 +29,17 @@ class MemberManager:
         try:
             self.cursor.execute(sql, (member_id, firstname, lastname, gender, age, weight, address, email, phone))
             self.conn.commit()
-            print(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id}")
+            input(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id} press any key to continue...")
             self.log_manager.log_activity(f"Registered member {firstname} {lastname}", "Successful")
         except sqlite3.IntegrityError:
-            print("Error: Member already exists.")
+            print("Error: Member already exiss.")
             self.log_manager.log_activity("Failed to register member {firstname} {lastname}", "IntegrityError")
 
     def address_input(self):
         street_name = input("Enter street name: ")
         house_number = ic.get_valid_int_input("Enter house number: ")
         zip_code = ic.get_valid_zip_code_input("Enter zip code (DDDDXX): ")
-
-        # Display predefined city list
+        print()
         print("Select a city from the following list:")
         for index, city in enumerate(self.cities, start=1):
             print(f"{index}. {city}")
@@ -75,6 +75,7 @@ class MemberManager:
         return results
     
     def search_members(self, search_key1):
+        self.clear_console()
         results = self.search_members_querry(search_key1)
         if results:
             print("Search Results:")
@@ -201,7 +202,7 @@ class MemberManager:
                     new_value = ic.get_valid_int_input("Enter new weight: ")
                     field_name = 'weight'
                 elif field_choice == '6':
-                    new_value = input("Enter new address: ").strip()
+                    new_value = self.address_input().strip()
                     field_name = 'address'
                 elif field_choice == '7':
                     new_value = ic.get_valid_email_input("Enter new email: ")
@@ -217,7 +218,7 @@ class MemberManager:
                     self.log_manager.log_activity(f"Updated {field_name} for member {member_id}", "Successful")
 
                     selected_member = list(selected_member)
-                    selected_member[field_choice] = new_value
+                    selected_member[int(field_choice)] = new_value
                     selected_member = tuple(selected_member)
 
                     print(f"{field_name.capitalize()} updated to: {new_value}")
@@ -226,9 +227,9 @@ class MemberManager:
                 print("Invalid choice. Please enter a number from the menu.")
 
         if field_updated:
-            if input("Do you want to edit anything else for this member? (yes/no): ").strip().lower() != 'yes':
+            if input("Do you want to edit something else for this member? (yes/no): ").strip().lower() != 'yes':
                 return
-
+            
     def delete_member(self, member_id):
         confirmation = input(f"Are you sure you want to delete member ID {member_id}? (yes/no): ").strip().lower()
         if confirmation == 'yes':
@@ -239,6 +240,6 @@ class MemberManager:
             print(f"Member ID {member_id} deleted.")
         else:
             print("Deletion canceled.")
-
+        
     def close(self):
         self.conn.close()
