@@ -201,7 +201,7 @@ class MemberManager:
                     new_value = ic.get_valid_int_input("Enter new weight: ")
                     field_name = 'weight'
                 elif field_choice == '6':
-                    new_value = input("Enter new address: ").strip()
+                    new_value = self.address_input().strip()
                     field_name = 'address'
                 elif field_choice == '7':
                     new_value = ic.get_valid_email_input("Enter new email: ")
@@ -239,6 +239,6 @@ class MemberManager:
             print(f"Member ID {member_id} deleted.")
         else:
             print("Deletion canceled.")
-
+        
     def close(self):
         self.conn.close()

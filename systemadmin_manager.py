@@ -52,13 +52,20 @@ class SystemAdminManager(BaseUsers):
             os.system('cls' if os.name == 'nt' else 'clear') 
     
     def search_users_querry(self, search_key):
-        search_key = f"%{search_key}%"
-        sql = '''SELECT * FROM users WHERE username LIKE ?'
-                OR first_name LIKE ? OR last_name LIKE ?
-                OR registration_date LIKE ? OR role LIKE ?'''
-        self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key))
-        results = self.cursor.fetchall()
-        return results
+        try:
+            if not search_key:
+                raise ValueError("Search key cannot be empty or None")
+
+            search_key = f"%{search_key}%"
+            sql = '''SELECT * FROM users WHERE username LIKE ?
+                    OR first_name LIKE ? OR last_name LIKE ?
+                    OR registration_date LIKE ? OR role LIKE ?'''
+            self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key))
+            results = self.cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"Error occurred while searching users: {e}")
+            return None
     
     def search_users(self, search_key):
         results = self.search_users_querry(search_key)
@@ -124,7 +131,7 @@ class SystemAdminManager(BaseUsers):
                     new_value = ic.validate_and_get_unique_username("Enter new username: ")
                     field_name = 'username'
                 elif field_choice == '2':
-                    new_value = generate_random_password()
+                    new_value = self.generate_random_password()
                     field_name = 'password'
                     print(f"Generated new password: {new_value}")
                 elif field_choice == '3':
@@ -245,37 +252,44 @@ class SystemAdminManager(BaseUsers):
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
-    def temporary_password(self):
+    def temporary_password(self, role):
         while True:
             self.clear_console()
-            search_key = input("Enter search keyword (consultant ID, first name, last name, etc.): ").strip()
-            results = self.search_consultants_query(search_key)
+            try:
+                search_key = input(f"Enter search keyword ({role}s ID, first name, last name, etc.): ").strip()
+                results = self.search_users_query(search_key, role)
 
-            if len(results) > 10:
-                print("More than 10 consultants found. Please refine your search.")
-            elif len(results) == 0:
-                print("No matching consultants found.")
-            else:
-                selected_consultant = self.select_consultant_from_results(results)
-                if selected_consultant:
-                    self.reset_consultant_password(selected_consultant[0], selected_consultant[1])
+                if len(results) > 10:
+                    print(f"More than 10 {role}s found. Please refine your search.")
+                elif len(results) == 0:
+                    print(f"No matching {role}s found.")
+                else:
+                    selected_user = self.select_user_from_results(results)
+                    if selected_user:
+                        self.reset_password(selected_user[0], selected_user[1], f"{role}s")
 
-            if input("Do you want to reset another consultant's password? (yes/no): ").strip().lower() != 'yes':
-                break
+                if input(f"Do you want to reset another {role}'s password? (yes/no): ").strip().lower() != 'yes':
+                    break
+            except Exception as e:
+                print(f"An error occurred: {e}")
 
-    def reset_consultant_password(self, consultant_id, username):
+    def reset_password(self, user_id, username, table_name):
         new_password = ic.generate_random_password()
-        sql_update = 'UPDATE consultants SET password = ? WHERE id = ?'
-        sql_update2 = 'UPDATE users SET password = ? WHERE username = ?'
+        sql_update = f'UPDATE {table_name} SET password = ? WHERE id = ?'
+        sql_update2 = f'UPDATE users SET password = ? WHERE username = ?'
 
-        self.cursor.execute(sql_update, (new_password, consultant_id))
-        self.cursor.execute(sql_update2, (new_password, username))
-
-        self.conn.commit()
-        self.log_manager.log_activity(f"Reset password for consultant ID {consultant_id}", "Successful")
-        print(f"Password for consultant ID {consultant_id} reset.") 
-        print(f"New password: {new_password}")
-        input("Write down the new password and press any key to continue...")
+        try:
+            self.cursor.execute(sql_update, (new_password, user_id))
+            self.cursor.execute(sql_update2, (new_password, username))
+            self.conn.commit()
+            self.log_manager.log_activity(f"Reset password for {table_name} ID {user_id}", "Successful")
+            print(f"Password for {table_name} ID {user_id} reset.")
+            print(f"New password: {new_password}")
+            input("Write down the new password and press any key to continue...")
+            return new_password
+        except Exception as e:
+            self.conn.rollback()
+            print(f"Failed to reset password: {e}") 
         
     def clear_console(self):
         os.system('cls' if os.name == 'nt' else 'clear')

@@ -9,6 +9,25 @@ class SuperAdminManager(SystemAdminManager):
     def __init__(self, log_manager):
         super().__init__(log_manager)
 
+    def update_password(self):
+        current_user = self.log_manager.current_user
+        user_role = self.get_user_role(current_user)
+
+        if user_role:
+            user_table = self.get_user_table(user_role)
+            new_password = ic.validate_password_input("Enter new password: ")
+            sql2 = 'UPDATE users SET password = ? WHERE username = ?'
+            try:
+                self.cursor.execute(sql2, (new_password, current_user))
+                self.conn.commit()
+                self.log_manager.log_activity(f"Updated password for {current_user}", "Successful")
+                input("Password updated successfully. Press Enter to continue.")
+            except sqlite3.IntegrityError:
+                self.log_manager.log_activity(f"Failed to update password for {current_user}", "IntegrityError")
+        else:
+            print("User role not found. Password update failed.")
+            self.log_manager.log_activity(f"Failed to update password for {current_user}", "RoleNotFound")
+            
     def search_sa_querry(self, search_key):
             search_key = f"%{search_key}%"
             sql = '''SELECT * FROM system_admins WHERE username LIKE ? 

@@ -63,13 +63,13 @@ class MenuHandler:
                     print("5.   Back")
                     option = input("Choose an option: ")
                     if option == '1':
-                        self.systemadmin_manager.register_consultant()
+                        self.consultant_manager.register_consultant()
                     elif option == '2':
-                        print("Editing consultant (feature to be implemented)")
+                        self.systemadmin_manager.edit_user("consultant")
                     elif option == '3':
-                        print("Deleting consultant (feature to be implemented)")
+                        self.systemadmin_manager.remove_user("consultant")
                     elif option == '4':
-                        print("Resetting consultant password (feature to be implemented)")
+                        self.systemadmin_manager.temporary_password("consultant")
                     elif option == '5':
                         break
                     else:
@@ -88,11 +88,11 @@ class MenuHandler:
                     if option == '1':
                         self.systemadmin_manager.register_SA()
                     elif option == '2':
-                        print("Editing system admin (feature to be implemented)")
+                        self.super_admin_manager.edit_user("system_admin")
                     elif option == '3':
-                        print("Deleting system admin (feature to be implemented)")
+                        self.super_admin_manager.remove_user("system_admin")
                     elif option == '4':
-                        print("Resetting system admin password (feature to be implemented)")
+                        self.super_admin_manager.temporary_password("system_admin")
                     elif option == '5':
                         break
                     else:
@@ -104,11 +104,11 @@ class MenuHandler:
                 print("3. Back")
                 option = input("Choose an option: ")
                 if option == '1':
-                    self.user_manager.create_backup();
+                    self.user_manager.create_backup()
                 elif option == '2':
                     print("Restoring backup (feature to be implemented)")
                 elif option == '3':
-                    break
+                    continue
             elif option == '7':
                 print("Viewing logs (feature to be implemented)")
             elif option == '8':
@@ -169,7 +169,7 @@ class MenuHandler:
                     elif option == '3':
                         self.systemadmin_manager.remove_user("consultant")
                     elif option == '4':
-                        self.systemadmin_manager.temporary_password()
+                        self.systemadmin_manager.temporary_password("consultant")
                     elif option == '5':
                         break
                     else:
