@@ -1,5 +1,8 @@
 import re
 import sqlite3
+import random
+import string
+
 import member_manager as MemberManager
 
 cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
@@ -119,3 +122,32 @@ def validate_password_input(prompt):
                 print(error)
         
         errors.clear()
+
+def generate_random_password():
+    while True:
+        # Generate a password with the desired length
+        length = random.randint(12, 30)
+        
+        # Ensure password contains at least one lowercase, one uppercase, one digit, and one special character
+        password_chars = [
+            random.choice(string.ascii_lowercase),
+            random.choice(string.ascii_uppercase),
+            random.choice(string.digits),
+            random.choice("~!@#$%&_-+=`|\\(){}[]:;'<>?,./")
+        ]
+        
+        # Fill the rest of the password length with random characters
+        remaining_length = length - 4
+        password_chars += random.choices(string.ascii_letters + string.digits + "~!@#$%&_-+=`|\\(){}[]:;'<>?,./", k=remaining_length)
+        
+        # Shuffle the characters to ensure randomness
+        random.shuffle(password_chars)
+        
+        password = ''.join(password_chars)
+        
+        if (len(password) >= 12 and len(password) <= 30 and
+            re.search(r'[a-z]', password) and
+            re.search(r'[A-Z]', password) and
+            re.search(r'\d', password) and
+            re.search(r'[~!@#$%&_\-=+`|\\(){}[\]:;\'<>,.?/]', password)):
+            return password

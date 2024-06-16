@@ -28,10 +28,10 @@ class MemberManager:
         try:
             self.cursor.execute(sql, (member_id, firstname, lastname, gender, age, weight, address, email, phone))
             self.conn.commit()
-            print(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id}")
+            input(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id} press any key to continue...")
             self.log_manager.log_activity(f"Registered member {firstname} {lastname}", "Successful")
         except sqlite3.IntegrityError:
-            print("Error: Member already exists.")
+            print("Error: Member already exiss.")
             self.log_manager.log_activity("Failed to register member {firstname} {lastname}", "IntegrityError")
 
     def address_input(self):
@@ -216,8 +216,9 @@ class MemberManager:
                     self.conn.commit()
                     self.log_manager.log_activity(f"Updated {field_name} for member {member_id}", "Successful")
 
+                    # Convert selected_member tuple to list, update value, and convert back to tuple
                     selected_member = list(selected_member)
-                    selected_member[field_choice] = new_value
+                    selected_member[int(field_choice)] = new_value  # Convert field_choice to int
                     selected_member = tuple(selected_member)
 
                     print(f"{field_name.capitalize()} updated to: {new_value}")
@@ -228,7 +229,6 @@ class MemberManager:
         if field_updated:
             if input("Do you want to edit anything else for this member? (yes/no): ").strip().lower() != 'yes':
                 return
-
     def delete_member(self, member_id):
         confirmation = input(f"Are you sure you want to delete member ID {member_id}? (yes/no): ").strip().lower()
         if confirmation == 'yes':
