@@ -39,8 +39,7 @@ class MemberManager:
         street_name = input("Enter street name: ")
         house_number = ic.get_valid_int_input("Enter house number: ")
         zip_code = ic.get_valid_zip_code_input("Enter zip code (DDDDXX): ")
-
-        # Display predefined city list
+        print()
         print("Select a city from the following list:")
         for index, city in enumerate(self.cities, start=1):
             print(f"{index}. {city}")
@@ -218,9 +217,8 @@ class MemberManager:
                     self.conn.commit()
                     self.log_manager.log_activity(f"Updated {field_name} for member {member_id}", "Successful")
 
-                    # Convert selected_member tuple to list, update value, and convert back to tuple
                     selected_member = list(selected_member)
-                    selected_member[int(field_choice)] = new_value  # Convert field_choice to int
+                    selected_member[int(field_choice)] = new_value
                     selected_member = tuple(selected_member)
 
                     print(f"{field_name.capitalize()} updated to: {new_value}")

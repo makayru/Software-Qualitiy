@@ -104,7 +104,7 @@ class SystemAdminManager(BaseUsers):
     def edit_user_details(self, selected_user, user_type):
         user_id = selected_user[0]
         username = selected_user[1]
-        role = selected_user[6]  # Assuming role is at index 6
+        role = selected_user[6]
         field_updated = False
 
         while True:

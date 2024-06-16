@@ -127,24 +127,17 @@ def validate_password_input(prompt):
 
 def generate_random_password():
     while True:
-        # Generate a password with the desired length
         length = random.randint(12, 30)
         
-        # Ensure password contains at least one lowercase, one uppercase, one digit, and one special character
         password_chars = [
             random.choice(string.ascii_lowercase),
             random.choice(string.ascii_uppercase),
             random.choice(string.digits),
             random.choice("~!@#$%&_-+=`|\\(){}[]:;'<>?,./")
         ]
-        
-        # Fill the rest of the password length with random characters
         remaining_length = length - 4
         password_chars += random.choices(string.ascii_letters + string.digits + "~!@#$%&_-+=`|\\(){}[]:;'<>?,./", k=remaining_length)
-        
-        # Shuffle the characters to ensure randomness
-        random.shuffle(password_chars)
-        
+        random.shuffle(password_chars)     
         password = ''.join(password_chars)
         
         if (len(password) >= 12 and len(password) <= 30 and

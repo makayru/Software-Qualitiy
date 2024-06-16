@@ -68,9 +68,6 @@ class UserManager:
         ''')
         self.conn.commit()
         
-        
-
-        # Insert default accounts if they do not exist
         self.insert_default_accounts()
 
     def authenticate_user(self, username, password):
@@ -128,7 +125,6 @@ class UserManager:
     def list_backup_files(self):
         backup_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backups')
         
-        # List backup files in the 'backups' directory
         backup_files = [f for f in os.listdir(backup_dir) if f.endswith('.zip')]
         
         if not backup_files:
@@ -139,7 +135,6 @@ class UserManager:
         for i, backup_file in enumerate(backup_files, start=1):
             print(f"{i}. {backup_file}")
         
-        # Prompt user to select a backup file
         while True:
             try:
                 choice = int(input("Enter the number of the backup file to restore: "))
@@ -155,15 +150,12 @@ class UserManager:
         if not backup_file:
             return
         
-        main_directory = os.path.dirname(os.path.abspath(__file__))  # Assuming UserManager is in main directory
+        main_directory = os.path.dirname(os.path.abspath(__file__))
         db_file = os.path.join(main_directory, 'unique_meal.db')
         
         try:
-            # Connect to SQLite database
             connection = sqlite3.connect(db_file)
             cursor = connection.cursor()
-
-            # Open the backup ZIP file
             with zipfile.ZipFile(backup_file, 'r') as backup_zip:
                 for file_info in backup_zip.infolist():
                     if file_info.filename.endswith('.sql'):
@@ -171,8 +163,6 @@ class UserManager:
                             sql_statements = sql_file.read().decode('utf-8')
                             cursor.executescript(sql_statements)
                             print(f"Executed SQL statements from {file_info.filename}")
-
-            # Commit changes and close connection
             connection.commit()
             connection.close()
             print("Database restored successfully.")

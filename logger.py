@@ -1,4 +1,3 @@
-# logger.py
 import sqlite3
 import datetime
 
@@ -43,40 +42,6 @@ class LoggerDatabaseManager:
         conn.commit()
         conn.close()
 
-    def is_suspicious_activity(self, username, activity):
-        # Example criteria for suspicion
-        if activity == 'login attempt' and self.check_failed_logins(username) > 5:
-            return 'Yes'
-        if activity == 'data access' and self.access_volume(username) > 1000:
-            return 'Yes'
-        if self.is_blacklisted_ip(self.get_user_ip(username)):
-            return 'Yes'
-        if self.is_out_of_normal_hours():
-            return 'Yes'
-        return 'No'
-
-    def check_failed_logins(self, username):
-        # Mock function to check failed login attempts
-        return 6  # Example: return a number greater than the threshold
-
-    def access_volume(self, username):
-        # Mock function to check the volume of accessed data
-        return 1200  # Example: return a number greater than the threshold
-
-    def is_blacklisted_ip(self, ip):
-        # Mock function to check if the IP is blacklisted
-        blacklisted_ips = ['192.168.1.1', '10.0.0.1']
-        return ip in blacklisted_ips
-
-    def get_user_ip(self, username):
-        # Mock function to get the user's IP address
-        return '192.168.1.1'  # Example: return a blacklisted IP
-    
-    def is_out_of_normal_hours(self):
-        # Mock function to check if the current time is outside normal hours
-        current_hour = datetime.datetime.now().hour
-        return current_hour < 6 or current_hour > 18
-    
     def format_logs(self, logs):
         formatted_logs = []
         print()
