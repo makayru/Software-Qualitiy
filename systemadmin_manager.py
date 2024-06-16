@@ -131,7 +131,7 @@ class SystemAdminManager(BaseUsers):
                     new_value = ic.validate_and_get_unique_username("Enter new username: ")
                     field_name = 'username'
                 elif field_choice == '2':
-                    new_value = self.generate_random_password()
+                    new_value = ic.validate_password_input("Enter new password: ")
                     field_name = 'password'
                     print(f"Generated new password: {new_value}")
                 elif field_choice == '3':
@@ -282,10 +282,7 @@ class SystemAdminManager(BaseUsers):
             self.cursor.execute(sql_update, (new_password, user_id))
             self.cursor.execute(sql_update2, (new_password, username))
             self.conn.commit()
-            self.log_manager.log_activity(f"Reset password for {table_name} ID {user_id}", "Successful")
-            print(f"Password for {table_name} ID {user_id} reset.")
-            print(f"New password: {new_password}")
-            input("Write down the new password and press any key to continue...")
+            self.log_manager.log_activity(f"Reset password for ID {user_id} username: {username}", "Successful")
             return new_password
         except Exception as e:
             self.conn.rollback()
@@ -293,3 +290,6 @@ class SystemAdminManager(BaseUsers):
         
     def clear_console(self):
         os.system('cls' if os.name == 'nt' else 'clear')
+    
+    def log_menu(self):
+        self.log_manager.logs_menu()

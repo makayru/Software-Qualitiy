@@ -1,7 +1,8 @@
 from getpass import getpass
 from menus import super_admin_menu, system_admin_menu, consultant_menu, default_menu
 import os
-
+import Display as display
+import logger as log
 class MenuHandler:
     def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager, super_admin_manager):
         self.user_manager = user_manager
@@ -31,6 +32,7 @@ class MenuHandler:
             elif option == '3':
                 while True:
                     self.clear_console()
+                    print(display.member_menu())
                     print(" Member management")
                     print("1. Add member")
                     print("2. Edit member")
@@ -55,6 +57,7 @@ class MenuHandler:
             elif option == '4':
                 while True:
                     self.clear_console()
+                    print(display.consultant_menu())
                     print("Consultant management")
                     print("1.   Add Consultant")
                     print("2.   Edit Consultant")
@@ -78,6 +81,7 @@ class MenuHandler:
                 
                 while True:
                     self.clear_console()
+                    print(display.adminAscii())
                     print("System Admin management")
                     print("1.   Add System Admin")
                     print("2.   Edit System Admin")
@@ -106,11 +110,11 @@ class MenuHandler:
                 if option == '1':
                     self.user_manager.create_backup()
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    print('Restore backup')
                 elif option == '3':
                     continue
             elif option == '7':
-                print("Viewing logs (feature to be implemented)")
+                self.super_admin_manager.log_menu()
             elif option == '8':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)
@@ -131,6 +135,7 @@ class MenuHandler:
             elif option == '3':
                 while True:
                     self.clear_console()
+                    print(display.member_menu())
                     print(" Member management")
                     print("1. Add member")
                     print("2. Edit member")
@@ -155,6 +160,7 @@ class MenuHandler:
             elif option == '4':
                 while True:
                     self.clear_console()
+                    print(display.consultant_menu())
                     print("Consultant management")
                     print("1.   Add Consultant")
                     print("2.   Edit Consultant")
@@ -182,11 +188,11 @@ class MenuHandler:
                 if option == '1':
                     self.user_manager.create_backup()
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    print('Restore backup')
                 elif option == '3':
-                    break
+                    continue
             elif option == '6':
-                print("Viewing logs (feature to be implemented)")
+                self.systemadmin_manager.log_menu()
             elif option == '7':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)

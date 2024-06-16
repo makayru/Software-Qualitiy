@@ -28,7 +28,7 @@ class Application:
             option = main_menu()
             if option == '1':
                 username = input("Enter username: ")
-                password = getpass("Enter password: ")
+                password = getpass("Your keyboard is not broken the letters are hidden \nEnter password : ")
                 role = self.user_manager.authenticate_user(username, password)
                 if role:
                     self.logger.set_current_user(username)
@@ -38,6 +38,7 @@ class Application:
                 else:
                     self.logger.log_activity(f"{username} login attempt", "Failed")
                     self.failed_attempts += 1
+                    input("Invalid credentials. Press enter to try again.")
                     if self.failed_attempts >= self.max_login_attempts:
                         print(f"Maximum login attempts reached. Please wait for {self.wait_time_seconds} seconds.")
                         time.sleep(self.wait_time_seconds)
@@ -47,7 +48,7 @@ class Application:
                 break
             else:
                 print("Invalid choice. Please try again.")
-
+    
 if __name__ == "__main__":
     app = Application()
     app.run()

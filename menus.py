@@ -3,13 +3,14 @@ import Display as display
 
 def main_menu():
     os.system('cls')
+    print(display.menu_ascii())
     print("1. Sign In")
     print("2. Exit")
     return input("Choose an option: ")
 
 def super_admin_menu():
     os.system('cls')
-    print("\nSuper Admin Menu")
+    print(display.super_admin_menu())
     print("1. Update password")
     print("2. View users")
     print("3. Member management")
@@ -35,11 +36,8 @@ def super_admin_menu():
     print("9. Exit")
     return input("Choose an option: ")
 
-
-
 def system_admin_menu():
     os.system('cls')
-    print("\nSystem Admin Menu")
     print(display.adminAscii())
     print("1. Update password")
     print("2. View users")
@@ -63,7 +61,6 @@ def system_admin_menu():
 
 def consultant_menu():
     os.system('cls')
-    print("\nConsultant Menu")
     print(display.consultant_menu())
     print("1. Update password")
     print("2. Add member")

@@ -152,4 +152,5 @@ def generate_random_password():
             re.search(r'[A-Z]', password) and
             re.search(r'\d', password) and
             re.search(r'[~!@#$%&_\-=+`|\\(){}[\]:;\'<>,.?/]', password)):
-            return password
+            input (f"Generated password: {password}\nPress enter to continue.")
+            return RSAEncryption().hash_data(password)

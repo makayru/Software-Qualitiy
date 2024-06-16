@@ -15,6 +15,7 @@ class MemberManager:
 
     def register_member(self):
         member_id = self.generate_membership_id()
+        print("\nNew member registration:")
         firstname = ic.validate_fname_or_lname_input("Enter first name: ")
         lastname = ic.validate_fname_or_lname_input("Enter last name: ")
         age = ic.get_valid_int_input("Enter age: ")
@@ -75,6 +76,7 @@ class MemberManager:
         return results
     
     def search_members(self, search_key1):
+        self.clear_console()
         results = self.search_members_querry(search_key1)
         if results:
             print("Search Results:")
@@ -227,8 +229,9 @@ class MemberManager:
                 print("Invalid choice. Please enter a number from the menu.")
 
         if field_updated:
-            if input("Do you want to edit anything else for this member? (yes/no): ").strip().lower() != 'yes':
+            if input("Do you want to edit something else for this member? (yes/no): ").strip().lower() != 'yes':
                 return
+            
     def delete_member(self, member_id):
         confirmation = input(f"Are you sure you want to delete member ID {member_id}? (yes/no): ").strip().lower()
         if confirmation == 'yes':
