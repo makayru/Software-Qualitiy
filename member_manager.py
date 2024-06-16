@@ -71,6 +71,7 @@ class MemberManager:
                  OR phone LIKE ?'''
         self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key, search_key, search_key, search_key, search_key))
         results = self.cursor.fetchall()
+        self.conn.commit()
         return results
     
     def search_members(self, search_key1):
@@ -79,11 +80,14 @@ class MemberManager:
             print("Search Results:")
             for row in results:
                 member_id, firstname, lastname, age, gender, weight, address, email, phone = row
-                print(f"ID: {member_id}, Name: {firstname} {lastname}")
+                print(f"ID: {member_id}, Name: {firstname} {lastname}, Age: {age}, Gender: {gender}, Weight: {weight}")
+                print(f"Address: {address}")
+                print(f"Email: {email}, Phone: {phone}")
+                print("-" * 20)
         else:
             print("No matching members found.")
             
-        input("Press any key to continue...")  # Wait for key press
+        input("Press any key to continue...")
         os.system('cls' if os.name == 'nt' else 'clear') 
 
     def clear_console(self):
@@ -93,6 +97,7 @@ class MemberManager:
         sql_select = 'SELECT * FROM members'
         self.cursor.execute(sql_select)
         members = self.cursor.fetchall()
+        self.conn.commit()
         return members  
     
     def edit_member(self):

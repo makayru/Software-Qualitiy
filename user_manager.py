@@ -16,6 +16,9 @@ class UserManager:
             id INTEGER PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            first_name TEXT NOT NULL,
+            last_name TEXT NOT NULL,
+            registration_date TEXT NOT NULL,
             role TEXT NOT NULL
         )
         ''')
@@ -40,6 +43,9 @@ class UserManager:
             id INTEGER PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            first_name TEXT NOT NULL,
+            last_name TEXT NOT NULL,
+            registration_date TEXT NOT NULL,
             role TEXT NOT NULL
         )
         ''')
@@ -49,6 +55,9 @@ class UserManager:
             id INTEGER PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            first_name TEXT NOT NULL,
+            last_name TEXT NOT NULL,
+            registration_date TEXT NOT NULL,
             role TEXT NOT NULL
         )
         ''')
@@ -87,8 +96,8 @@ class UserManager:
         for username, password, role in default_accounts:
             self.cursor.execute('SELECT COUNT(*) FROM users WHERE username = ?', (username,))
             if self.cursor.fetchone()[0] == 0:
-                self.cursor.execute('INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-                                    (username, password, role))
+                self.cursor.execute('INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)',
+                                    (username, password,"", "", "", role))
                 self.conn.commit()
                 print(f"Account {username} with role {role} inserted successfully.")
                 self.logger.log_activity("insert default account", "Successful")

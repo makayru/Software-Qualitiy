@@ -7,6 +7,7 @@ from getpass import getpass
 from menus import main_menu
 from menu_handler import MenuHandler
 from logger import LoggerDatabaseManager
+import time
 
 class Application:
     def __init__(self):
@@ -16,6 +17,9 @@ class Application:
         self.consultant_manager = ConsultantManager(self.logger)
         self.systemadmin_manager = SystemAdminManager(self.logger)
         self.menu_handler = MenuHandler(self.user_manager, self.member_manager, self.consultant_manager, self.systemadmin_manager)
+        self.max_login_attempts = 3
+        self.wait_time_seconds = 10
+        self.failed_attempts = 0
 
     def run(self):
         while True:
@@ -28,6 +32,14 @@ class Application:
                     self.logger.set_current_user(username)
                     self.logger.log_activity("login attempt", "Successful")
                     self.menu_handler.display_role_based_menu(role)
+                    self.failed_attempts = 0
+                else:
+                    self.logger.log_activity(f"{username} login attempt", "Failed")
+                    self.failed_attempts += 1
+                    if self.failed_attempts >= self.max_login_attempts:
+                        print(f"Maximum login attempts reached. Please wait for {self.wait_time_seconds} seconds.")
+                        time.sleep(self.wait_time_seconds)
+                        self.failed_attempts = 0
             elif option == '2':
                 self.user_manager.close()
                 break

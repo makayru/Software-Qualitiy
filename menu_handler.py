@@ -24,25 +24,77 @@ class MenuHandler:
             os.system('cls')
             option = super_admin_menu()
             if option == '1':
-                print("Viewing all users (feature to be implemented)")
+                print("Updating password (feature to be implemented)")
             elif option == '2':
-                print("What role do you want to assign to the new user? \n 1. Consultant \n 2. System Admin \n 3. Member")
-                role = input("Choose an option: ")
-                if role == '1':
-                    self.consultant_manager.register_consultant()
-                elif role == '2':
-                    self.systemadmin_manager.register_SA()
-                elif role == '3':
-                    self.member_manager.register_member()
-                else:
-                    print("Invalid choice. Please try again.")
-                    
-                
-                
+                print("Viewing users (feature to be implemented)")
             elif option == '3':
-                print("Editing user (feature to be implemented)")
+                while True:
+                    self.clear_console()
+                    print(" Member management")
+                    print("1. Add member")
+                    print("2. Edit member")
+                    print("3. Delete member")
+                    print("4. View members")
+                    print("5. Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.member_manager.register_member()
+                    elif option == '2':
+                        self.member_manager.edit_member()
+                    elif option == '3':
+                        print("Deleting member (feature to be implemented)")
+                    elif option == '4':
+                        self.member_manager.view_members()
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
+
             elif option == '4':
-                print("Deleting user (feature to be implemented)")
+                while True:
+                    self.clear_console()
+                    print("Consultant management")
+                    print("1.   Add Consultant")
+                    print("2.   Edit Consultant")
+                    print("3.   Delete Consultant")
+                    print("4.   Reset consultant password (temporary)")
+                    print("5.   Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.consultant_manager.register_consultant()
+                    elif option == '2':
+                        print("Editing consultant (feature to be implemented)")
+                    elif option == '3':
+                        print("Deleting consultant (feature to be implemented)")
+                    elif option == '4':
+                        print("Resetting consultant password (feature to be implemented)")
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
+            elif option == '5':
+                
+                while True:
+                    self.clear_console()
+                    print("System Admin management")
+                    print("1.   Add System Admin")
+                    print("2.   Edit System Admin")
+                    print("3.   Delete System Admin")
+                    print("4.   Reset System admin password (temporary)")
+                    print("5.   Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.systemadmin_manager.register_SA()
+                    elif option == '2':
+                        print("Editing system admin (feature to be implemented)")
+                    elif option == '3':
+                        print("Deleting system admin (feature to be implemented)")
+                    elif option == '4':
+                        print("Resetting system admin password (feature to be implemented)")
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
             elif option == '5':
                 print("Resetting user password (feature to be implemented)")
             elif option == '6':
@@ -61,35 +113,90 @@ class MenuHandler:
     def system_admin_menu(self):
         while True:
             os.system('cls')
-            option = system_admin_menu()
+            option = super_admin_menu()
             if option == '1':
-                print("Updating password (feature to be implemented)")
+                self.systemadmin_manager.update_password()
             elif option == '2':
-                print("Viewing users (feature to be implemented)")
+                self.systemadmin_manager.view_users()
             elif option == '3':
-                print("What role do you want to assign to the new user? \n 1. Consultant \n 2. Member")
-                role = input("Choose an option: ")
-                if role == '1':
-                    self.consultant_manager.register_consultant()
-                elif role == '2':
-                    self.member_manager.register_member()
-                else:
-                    print("Invalid choice. Please try again.")
-                
+                while True:
+                    self.clear_console()
+                    print(" Member management")
+                    print("1. Add member")
+                    print("2. Edit member")
+                    print("3. Delete member")
+                    print("4. View members")
+                    print("5. Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.member_manager.register_member()
+                    elif option == '2':
+                        self.member_manager.edit_member()
+                    elif option == '3':
+                        print("Deleting member (feature to be implemented)")
+                    elif option == '4':
+                        self.member_manager.view_members()
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
+
             elif option == '4':
-                print("Edit user (feature to be implemented)")
+                while True:
+                    self.clear_console()
+                    print("Consultant management")
+                    print("1.   Add Consultant")
+                    print("2.   Edit Consultant")
+                    print("3.   Delete Consultant")
+                    print("4.   Reset consultant password (temporary)")
+                    print("5.   Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.consultant_manager.register_consultant()
+                    elif option == '2':
+                        print("Editing consultant (feature to be implemented)")
+                    elif option == '3':
+                        print("Deleting consultant (feature to be implemented)")
+                    elif option == '4':
+                        print("Resetting consultant password (feature to be implemented)")
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
             elif option == '5':
-                print("Delete user (feature to be implemented)")
+                
+                while True:
+                    self.clear_console()
+                    print("System Admin management")
+                    print("1.   Add System Admin")
+                    print("2.   Edit System Admin")
+                    print("3.   Delete System Admin")
+                    print("4.   Reset System admin password (temporary)")
+                    print("5.   Back")
+                    option = input("Choose an option: ")
+                    if option == '1':
+                        self.systemadmin_manager.register_SA()
+                    elif option == '2':
+                        print("Editing system admin (feature to be implemented)")
+                    elif option == '3':
+                        print("Deleting system admin (feature to be implemented)")
+                    elif option == '4':
+                        print("Resetting system admin password (feature to be implemented)")
+                    elif option == '5':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
+            elif option == '5':
+                print("Resetting user password (feature to be implemented)")
             elif option == '6':
-                print("Reset user password (feature to be implemented)")
-            elif option == '7':
                 print("Backup and Restore (feature to be implemented)")
-            elif option == '8':
+            elif option == '7':
                 print("Viewing logs (feature to be implemented)")
-            elif option == '9':
+            elif option == '8':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)
-            elif option == '10':
+
+            elif option == '9':
                 break
             else:
                 print("Invalid choice. Please try again.")
@@ -113,7 +220,8 @@ class MenuHandler:
                 print("Invalid choice. Please try again.")
                 
             
-
+    def clear_console(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     def default_menu(self):
         os.system('cls')
