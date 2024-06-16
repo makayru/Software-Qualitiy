@@ -97,10 +97,18 @@ class MenuHandler:
                         break
                     else:
                         print("Invalid choice. Please try again.")
-            elif option == '5':
-                print("Resetting user password (feature to be implemented)")
             elif option == '6':
-                print("Backup and Restore (feature to be implemented)")
+                self.clear_console()
+                print("1. Create backup")
+                print("2. Restore backup")
+                print("3. Back")
+                option = input("Choose an option: ")
+                if option == '1':
+                    self.user_manager.create_backup();
+                elif option == '2':
+                    print("Restoring backup (feature to be implemented)")
+                elif option == '3':
+                    break
             elif option == '7':
                 print("Viewing logs (feature to be implemented)")
             elif option == '8':
@@ -167,7 +175,16 @@ class MenuHandler:
                     else:
                         print("Invalid choice. Please try again.")
             elif option == '5':
-                print("Backup and Restore (feature to be implemented)")
+                print("1. Create backup")
+                print("2. Restore backup")
+                print("3. Back")
+                option = input("Choose an option: ")
+                if option == '1':
+                    self.user_manager.create_backup()
+                elif option == '2':
+                    print("Restoring backup (feature to be implemented)")
+                elif option == '3':
+                    break
             elif option == '6':
                 print("Viewing logs (feature to be implemented)")
             elif option == '7':

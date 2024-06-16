@@ -2,6 +2,9 @@
 import sqlite3
 import datetime
 import logger as log
+import os
+import zipfile
+from encryption import RSAEncryption
 
 class UserManager:
     def __init__(self, logger):
@@ -9,6 +12,7 @@ class UserManager:
         self.cursor = self.conn.cursor()
         self.logger = logger
         self.create_table()
+        self.current_user = None
 
     def create_table(self):
         self.cursor.execute('''
@@ -69,12 +73,13 @@ class UserManager:
         self.insert_default_accounts()
 
     def authenticate_user(self, username, password):
+        self.current_user = username
         sql = 'SELECT password, role FROM users WHERE username = ?'
         self.cursor.execute(sql, (username,))
         user = self.cursor.fetchone()
         if user:
             stored_password, role = user
-            if stored_password == password:
+            if stored_password == RSAEncryption.hash_data(self, password):
                 print(f"Authentication successful. Role: {role}")
                 self.logger.log_activity('login attempt', 'Successful')
                 return role
@@ -90,7 +95,7 @@ class UserManager:
     def insert_default_accounts(self):
         """Insert default accounts with predefined credentials if they do not exist."""
         default_accounts = [
-            ("super_admin", "Admin_123?", "Super_Administrator"),
+            (f"super_admin", RSAEncryption.hash_data(self, "Admin_123?"), "Super_Administrator"),
         ]
 
         for username, password, role in default_accounts:
@@ -104,6 +109,20 @@ class UserManager:
             else:
                 print(f"Account {username} already exists.")
                 self.logger.log_activity( "insert default account", "Failed: Already exists")
+
+    def create_backup(self):
+        backup_dir = 'backups'
+        if not os.path.exists(backup_dir):
+            os.makedirs(backup_dir)
+        
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_filename = os.path.join(backup_dir, f'backup_{timestamp}.zip')
+
+        with zipfile.ZipFile(backup_filename, 'w') as backup_zip:
+            backup_zip.write('unique_meal.db')
+            backup_zip.write('logs.db')
+
+        self.logger.log_activity(f"Created backup_{timestamp}.zip", "Successful")
 
     def close(self):
         self.conn.close()
