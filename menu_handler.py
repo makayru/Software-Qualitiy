@@ -95,10 +95,18 @@ class MenuHandler:
                         break
                     else:
                         print("Invalid choice. Please try again.")
-            elif option == '5':
-                print("Resetting user password (feature to be implemented)")
             elif option == '6':
-                print("Backup and Restore (feature to be implemented)")
+                self.clear_console()
+                print("1. Create backup")
+                print("2. Restore backup")
+                print("3. Back")
+                option = input("Choose an option: ")
+                if option == '1':
+                    self.user_manager.create_backup();
+                elif option == '2':
+                    print("Restoring backup (feature to be implemented)")
+                elif option == '3':
+                    break
             elif option == '7':
                 print("Viewing logs (feature to be implemented)")
             elif option == '8':
@@ -113,7 +121,7 @@ class MenuHandler:
     def system_admin_menu(self):
         while True:
             os.system('cls')
-            option = super_admin_menu()
+            option = system_admin_menu()
             if option == '1':
                 self.systemadmin_manager.update_password()
             elif option == '2':
@@ -164,7 +172,16 @@ class MenuHandler:
                     else:
                         print("Invalid choice. Please try again.")
             elif option == '5':
-                print("Backup and Restore (feature to be implemented)")
+                print("1. Create backup")
+                print("2. Restore backup")
+                print("3. Back")
+                option = input("Choose an option: ")
+                if option == '1':
+                    self.user_manager.create_backup()
+                elif option == '2':
+                    print("Restoring backup (feature to be implemented)")
+                elif option == '3':
+                    break
             elif option == '6':
                 print("Viewing logs (feature to be implemented)")
             elif option == '7':
