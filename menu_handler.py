@@ -133,7 +133,7 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        print("Deleting member (feature to be implemented)")
+                        self.member_manager.delete_member()
                     elif option == '4':
                         self.member_manager.view_members()
                     elif option == '5':
@@ -164,39 +164,13 @@ class MenuHandler:
                     else:
                         print("Invalid choice. Please try again.")
             elif option == '5':
-                
-                while True:
-                    self.clear_console()
-                    print("System Admin management")
-                    print("1.   Add System Admin")
-                    print("2.   Edit System Admin")
-                    print("3.   Delete System Admin")
-                    print("4.   Reset System admin password (temporary)")
-                    print("5.   Back")
-                    option = input("Choose an option: ")
-                    if option == '1':
-                        self.systemadmin_manager.register_SA()
-                    elif option == '2':
-                        print("Editing system admin (feature to be implemented)")
-                    elif option == '3':
-                        print("Deleting system admin (feature to be implemented)")
-                    elif option == '4':
-                        print("Resetting system admin password (feature to be implemented)")
-                    elif option == '5':
-                        break
-                    else:
-                        print("Invalid choice. Please try again.")
-            elif option == '5':
-                print("Resetting user password (feature to be implemented)")
-            elif option == '6':
                 print("Backup and Restore (feature to be implemented)")
-            elif option == '7':
+            elif option == '6':
                 print("Viewing logs (feature to be implemented)")
-            elif option == '8':
+            elif option == '7':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)
-
-            elif option == '9':
+            elif option == '8':
                 break
             else:
                 print("Invalid choice. Please try again.")
