@@ -25,5 +25,20 @@ class SystemAdminManager:
         except sqlite3.IntegrityError:
             self.log_manager.log_activity(f"Failed to register system admin {username}", "IntegrityError")
     
-    
+    def update_password(self):
+        current_user = self.log_manager.current_user
+        password = ic.validate_password_input("Enter new password: ")
+        sql = 'UPDATE consultants SET password = ? WHERE username = ?'
+        sql2 = 'UPDATE users SET password = ? WHERE username = ?'
+        try:
+            self.cursor.execute(sql, (password,current_user))
+            self.cursor.execute(sql2, (password,current_user))
+            self.conn.commit()
+            self.log_manager.log_activity(f"Updated password for consultant {self.current_user}", "Successful")
+            input("Password updated successfully. Press Enter to continue.")
+
+        except sqlite3.IntegrityError:
+            self.log_manager.log_activity(f"Failed to update password for consultant {self.current_user}", "IntegrityError")
+            input("Password updated successfully. Press Enter to continue.")
+
     

@@ -75,7 +75,7 @@ def validate_and_get_unique_username(prompt):
         if not errors: 
             conn = connect_db()
             cursor = conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM members WHERE username = ?", (username,))
+            cursor.execute("SELECT COUNT(*) FROM users WHERE username = ?", (username,))
             count = cursor.fetchone()[0]
             conn.close()
 
@@ -87,7 +87,10 @@ def validate_and_get_unique_username(prompt):
                 print("Invalid Username:")
                 for error in errors:
                     print(error)
-                    
+        else:
+            print("Invalid Username:")
+            for error in errors:
+                print(error)
         errors.clear()
     
         

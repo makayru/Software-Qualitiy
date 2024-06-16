@@ -99,15 +99,14 @@ class MenuHandler:
             os.system('cls')
             option = consultant_menu()
             if option == '1':
-                print("Updating password (feature to be implemented)")
+                self.consultant_manager.update_password()
             elif option == '2':
                 self.member_manager.register_member()
             elif option == '3':
-                print("Editing member (feature to be implemented)")
+                self.member_manager.edit_member()
             elif option == '4':
                 search_key = input("Enter search key: ")
                 self.member_manager.search_members(search_key)
-
             elif option == '5':
                 break
             else:

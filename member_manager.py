@@ -15,8 +15,8 @@ class MemberManager:
 
     def register_member(self):
         member_id = self.generate_membership_id()
-        firstname = input("Enter first name: ")
-        lastname = input("Enter last name: ")
+        firstname = ic.validate_fname_or_lname_input("Enter first name: ")
+        lastname = ic.validate_fname_or_lname_input("Enter last name: ")
         age = ic.get_valid_int_input("Enter age: ")
         gender = ic.get_valid_gender_input("Enter gender (M/F): ")
         weight = ic.get_valid_int_input("Enter weight: ")
@@ -56,19 +56,25 @@ class MemberManager:
         membership_id = partial_id + str(checksum)
         return membership_id
     
-    def search_members(self, search_key):
+    def search_members_querry(self, search_key):
         search_key = f"%{search_key}%"
         sql = '''SELECT member_id, firstname, lastname, age, gender, weight, address, email, phone 
                  FROM members 
                  WHERE member_id LIKE ? 
                  OR firstname LIKE ? 
                  OR lastname LIKE ? 
+                 OR age LIKE ?
+                 OR gender LIKE ?
+                 OR weight LIKE ?
                  OR address LIKE ? 
                  OR email LIKE ? 
                  OR phone LIKE ?'''
-        self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key, search_key))
+        self.cursor.execute(sql, (search_key, search_key, search_key, search_key, search_key, search_key, search_key, search_key, search_key))
         results = self.cursor.fetchall()
-
+        return results
+    
+    def search_members(self, search_key1):
+        results = self.search_members_querry(search_key1)
         if results:
             print("Search Results:")
             for row in results:
@@ -79,6 +85,133 @@ class MemberManager:
             
         input("Press any key to continue...")  # Wait for key press
         os.system('cls' if os.name == 'nt' else 'clear') 
-        
 
+    def clear_console(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
+    def fetch_members(self):
+        sql_select = 'SELECT * FROM members'
+        self.cursor.execute(sql_select)
+        members = self.cursor.fetchall()
+        return members  
+    
+    def edit_member(self):
+        while True:
+            self.clear_console()
+
+            search_key = input("Enter search keyword (member ID, first name, last name, etc.): ").strip()
+            results = self.search_members_querry(search_key)
+
+            if len(results) > 10:
+                print("More than 10 members found. Please refine your search.")
+            elif len(results) == 0:
+                print("No matching members found.")
+            else:
+                
+                while True:
+                    try:
+                        self.clear_console()
+                        print("Search Results:")
+                        for index, row in enumerate(results, start=1):
+                            member_id, firstname, lastname, age, gender, weight, address, email, phone = row
+                            print(f"{index}. ID: {member_id}, Name: {firstname} {lastname}")
+
+                        choice = int(input("Enter the number of the member to edit (or '0' to cancel): ").strip())
+                        if choice == 0:
+                            print("Canceled editing.")
+                            break
+                        elif 1 <= choice <= len(results):
+                            selected_member = results[choice - 1]
+                            member_id = selected_member[0]
+                            print(f"Editing member ID {member_id}:")
+                            print("-----------------------------")
+                            field_updated = False
+
+                            while True:
+                                self.clear_console()
+                                print(f"1. First Name: {selected_member[1]}")
+                                print(f"2. Last Name: {selected_member[2]}")
+                                print(f"3. Age: {selected_member[3]}")
+                                print(f"4. Gender: {selected_member[4]}")
+                                print(f"5. Weight: {selected_member[5]}")
+                                print(f"6. Address: {selected_member[6]}")
+                                print(f"7. Email: {selected_member[7]}")
+                                if len(selected_member) > 8:
+                                    print(f"8. Phone: {selected_member[8]}")
+                                print("-----------------------------")
+
+                                field_choice = input("Enter the number of the field to edit (or '0' to finish editing this member): ").strip()
+
+                                if field_choice == '0':
+                                    print("Finished editing this member.")
+                                    break
+                                elif field_choice in {'1', '2', '3', '4', '5', '6', '7', '8'}:
+                                    new_value = None
+                                    field_name = None
+                                    if field_choice == '1':
+                                        new_value = ic.validate_fname_or_lname_input("Enter new first name: ")
+                                        field_name = 'firstname'
+                                    elif field_choice == '2':
+                                        new_value = ic.validate_fname_or_lname_input("Enter new last name: ")
+                                        field_name = 'lastname'
+                                    elif field_choice == '3':
+                                        new_value = ic.get_valid_int_input("Enter new age: ")
+                                        field_name = 'age'
+                                    elif field_choice == '4':
+                                        new_value = ic.get_valid_gender_input("Enter new gender: ")
+                                        field_name = 'gender'
+                                    elif field_choice == '5':
+                                        new_value = ic.get_valid_int_input("Enter new weight: ")
+                                        field_name = 'weight'
+                                    elif field_choice == '6':
+                                        new_value = input("Enter new address: ").strip()
+                                        field_name = 'address'
+                                    elif field_choice == '7':
+                                        new_value = ic.get_valid_email_input("Enter new email: ")
+                                        field_name = 'email'
+                                    elif field_choice == '8':
+                                        new_value = ic.get_valid_phone_input("Enter new phone number: ")
+                                        field_name = 'phone'
+
+                                    if new_value is not None and field_name is not None:
+                                        sql_update = f'UPDATE members SET {field_name} = ? WHERE member_id = ?'
+                                        self.cursor.execute(sql_update, (new_value, member_id))
+                                        self.conn.commit()
+                                        self.log_manager.log_activity(f"Updated {field_name} for member {member_id}", "Successful")
+
+                                        if field_choice == '1':
+                                            selected_member = (selected_member[0], new_value, *selected_member[2:])
+                                        elif field_choice == '2':
+                                            selected_member = (selected_member[0], selected_member[1], new_value, *selected_member[3:])
+                                        elif field_choice == '3':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], new_value, *selected_member[4:])
+                                        elif field_choice == '4':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], selected_member[3], new_value, *selected_member[5:])
+                                        elif field_choice == '5':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], selected_member[3], selected_member[4], new_value, *selected_member[6:])
+                                        elif field_choice == '6':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], selected_member[3], selected_member[4], selected_member[5], new_value, *selected_member[7:])
+                                        elif field_choice == '7':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], selected_member[3], selected_member[4], selected_member[5], selected_member[6], new_value, *selected_member[8:])
+                                        elif field_choice == '8':
+                                            selected_member = (selected_member[0], selected_member[1], selected_member[2], selected_member[3], selected_member[4], selected_member[5], selected_member[6], selected_member[7], new_value)
+
+                                        print(f"{field_name.capitalize()} updated to: {new_value}")
+                                        field_updated = True
+
+                                else:
+                                    print("Invalid choice. Please enter a number from the menu.")
+
+                            if field_updated:
+                                if input("Do you want to edit anything else for this member? (yes/no): ").strip().lower() != 'yes':
+                                    break
+                        else:
+                            print("Invalid choice. Please enter a valid number.")
+                    except ValueError:
+                        print("Invalid input. Please enter a number.")
+
+            if input("Do you want to edit anything else? (yes/no): ").strip().lower() != 'yes':
+                break
+
+    def close(self):
+        self.conn.close()
