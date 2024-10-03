@@ -217,6 +217,7 @@ class MemberManager:
                     self.log_manager.log_activity(f"Updated {field_name} for member {member_id}", "Successful")
 
                     selected_member = list(selected_member)
+                    field_choice = int(field_choice) 
                     selected_member[field_choice] = new_value
                     selected_member = tuple(selected_member)
 

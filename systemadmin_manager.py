@@ -3,11 +3,14 @@ from datetime import datetime
 import input_checker as ic
 from BaseUsers import BaseUsers
 import sqlite3
+import encryption as enc
 
 
 class SystemAdminManager(BaseUsers):
     def __init__(self, log_manager):
         super().__init__(log_manager)
+        self.encryption = enc.RSAEncryption()
+
 
     def register_SA(self):
         username = ic.validate_and_get_unique_username("Enter username: ")
@@ -17,11 +20,14 @@ class SystemAdminManager(BaseUsers):
         role = 'SystemAdmin'
         registration_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        encrypted_username = self.encryption.encrypt_data(username)
+
+
         sql = 'INSERT INTO system_admins (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'   
         sql2 = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
         try:
-            self.cursor.execute(sql, (username, password,firstname, lastname, registration_date , role))
-            self.cursor.execute(sql2, (username, password, firstname, lastname, registration_date, role))
+            self.cursor.execute(sql, (encrypted_username, password,firstname, lastname, registration_date , role))
+            self.cursor.execute(sql2, (encrypted_username, password, firstname, lastname, registration_date, role))
             self.conn.commit()
             self.log_manager.log_activity(f"Registered system admin {username}", "Successful")
         except sqlite3.IntegrityError:
