@@ -1,4 +1,3 @@
-# main.py
 from user_manager import UserManager
 from member_manager import MemberManager
 from consultant_manager import ConsultantManager
