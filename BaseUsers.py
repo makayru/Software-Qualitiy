@@ -29,7 +29,7 @@ class BaseUsers:
 
         if user_role:
             user_table = self.get_user_table(user_role)
-            new_password = ic.validate_password_input("\n----------------\nEnter new password: ")
+            new_password = ic.validate_password_input("Enter new password: ")
             sql = f'UPDATE {user_table} SET password = ? WHERE username = ?'
             sql2 = 'UPDATE users SET password = ? WHERE username = ?'
             try:

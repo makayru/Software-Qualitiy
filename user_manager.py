@@ -5,7 +5,6 @@ import logger as log
 import os
 import zipfile
 from encryption import RSAEncryption
-import shutil
 
 class UserManager:
     def __init__(self, logger):
@@ -68,32 +67,46 @@ class UserManager:
         ''')
         self.conn.commit()
         
+        
+
+        # Insert default accounts if they do not exist
         self.insert_default_accounts()
 
     def authenticate_user(self, username, password):
-        self.current_user = username
-        sql = 'SELECT password, role FROM users WHERE username = ?'
-        self.cursor.execute(sql, (username,))
-        user = self.cursor.fetchone()
-        if user:
-            stored_password, role = user
-            if stored_password == RSAEncryption.hash_data(self, password):
+        # Fetch all encrypted usernames and passwords from the database
+        sql = 'SELECT username, password, role FROM users'
+        self.cursor.execute(sql)
+        users = self.cursor.fetchall()
+        
+        # Hash the input password
+        hashed_input_password = RSAEncryption.hash_data(password)
+    
+        # Iterate through users and attempt decryption/authentication
+        for encrypted_username, stored_password, role in users:
+            try:
+                decrypted_username = RSAEncryption.decrypt_data(encrypted_username)
+            except Exception as e:
+                print(f"Decryption failed: {str(e)}")
+                continue  # Skip this entry if decryption fails
+            
+            if decrypted_username == username and stored_password == hashed_input_password:
+                self.current_user = username
                 print(f"Authentication successful. Role: {role}")
                 self.logger.log_activity('login attempt', 'Successful')
                 return role
-            else:
-                print("Authentication failed. Incorrect password.")
-                self.logger.log_activity('login attempt', 'Failed: Incorrect password')
-                return None
-        else:
-            print("Authentication failed. User not found.")
-            self.logger.log_activity('login attempt', 'Failed: User not found')
-            return None
+        
+        # If no match was found
+        print("Authentication failed. User not found or incorrect password.")
+        self.logger.log_activity('login attempt', 'Failed: User not found or incorrect password')
+        return None
+
+
+    
 
     def insert_default_accounts(self):
         """Insert default accounts with predefined credentials if they do not exist."""
         default_accounts = [
-            (f"super_admin", RSAEncryption.hash_data(self, "Admin_123?"), "Super_Administrator"),
+            (RSAEncryption.encrypt_data("super_admin"), RSAEncryption.hash_data("Admin_123?"), "Super_Administrator"),
         ]
 
         for username, password, role in default_accounts:
@@ -121,61 +134,6 @@ class UserManager:
             backup_zip.write('logs.db')
 
         self.logger.log_activity(f"Created backup_{timestamp}.zip", "Successful")
-        
-    def list_backup_files(self):
-        backup_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backups')
-        
-        backup_files = [f for f in os.listdir(backup_dir) if f.endswith('.zip')]
-        
-        if not backup_files:
-            print("No backup ZIP files found in the 'backups' directory.")
-            return None
-        
-        print("Available backup files:")
-        for i, backup_file in enumerate(backup_files, start=1):
-            print(f"{i}. {backup_file}")
-        
-        while True:
-            try:
-                choice = int(input("Enter the number of the backup file to restore: "))
-                if 1 <= choice <= len(backup_files):
-                    selected_backup = backup_files[choice - 1]
-                    return os.path.join(backup_dir, selected_backup)
-                else:
-                    print("Invalid choice. Please enter a number within the range.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-    def restore_backup(self):
-        backup_file = self.list_backup_files()
-        if not backup_file:
-            return
-        
-        main_directory = os.path.dirname(os.path.abspath(__file__))
-        db_file = os.path.join(main_directory, 'unique_meal.db')
-        
-        try:
-            connection = sqlite3.connect(db_file)
-            cursor = connection.cursor()
-            with zipfile.ZipFile(backup_file, 'r') as backup_zip:
-                for file_info in backup_zip.infolist():
-                    if file_info.filename.endswith('.sql'):
-                        with backup_zip.open(file_info) as sql_file:
-                            sql_statements = sql_file.read().decode('utf-8')
-                            cursor.executescript(sql_statements)
-                            print(f"Executed SQL statements from {file_info.filename}")
-            connection.commit()
-            connection.close()
-            print("Database restored successfully.")
 
-        except sqlite3.Error as e:
-            print(f"SQLite error: {e}")
-        except zipfile.BadZipFile:
-            print(f"Invalid ZIP file: {backup_file}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-        finally:
-            if connection:
-                connection.close()
-    
     def close(self):
         self.conn.close()
