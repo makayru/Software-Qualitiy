@@ -1,51 +1,68 @@
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import serialization
+import base64
 import hashlib
 
 class RSAEncryption:
-    def __init__(self):
-        self.private_key = None
-        self.public_key = None
-        self.load_keys()
+    # Hard-coded paths for the keys (Update these with your actual paths)
+    PUBLIC_KEY_PATH = 'public_key.pem'
+    PRIVATE_KEY_PATH = 'private_key.pem'
 
-    def load_keys(self):
-        try:
-            with open("private_key.pem", "rb") as f:
-                self.private_key = serialization.load_pem_private_key(
-                    f.read(),
-                    password=None
-                )
+    @staticmethod
+    def load_public_key():
+        with open(RSAEncryption.PUBLIC_KEY_PATH, 'rb') as key_file:
+            public_key = serialization.load_pem_public_key(
+                key_file.read(),
+                backend=default_backend()
+            )
+        return public_key
+    
+    @staticmethod
+    def load_private_key():
+        with open(RSAEncryption.PRIVATE_KEY_PATH, 'rb') as key_file:
+            private_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=None,
+                backend=default_backend()
+            )
+        return private_key
 
-            with open("public_key.pem", "rb") as f:
-                self.public_key = serialization.load_pem_public_key(f.read())
-        except FileNotFoundError:
-            self.generate_keys()
-
-    def hash_data(self, data):
+    @staticmethod
+    def hash_data(data):
         return hashlib.sha256(data.encode()).hexdigest()
 
-    def encrypt_data(self, data: str) -> bytes:
-        # Encrypt the data using the public key
-        encrypted = self.public_key.encrypt(
-            data.encode(),
+    @staticmethod
+    def encrypt_data(data: str) -> str:
+        public_key = RSAEncryption.load_public_key()
+        encrypted_data = public_key.encrypt(
+            data.encode('utf-8'),
             padding.OAEP(
                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
                 algorithm=hashes.SHA256(),
                 label=None
             )
         )
-        return encrypted
+        # Encode the encrypted data in base64 for safe storage in databases
+        return base64.b64encode(encrypted_data).decode('utf-8')
 
-    def decrypt_data(self, encrypted_data: bytes) -> str:
-        # Decrypt the data using the private key
-        decrypted = self.private_key.decrypt(
-            encrypted_data,
+    def fix_base64_padding(data: str) -> str:
+        """Ensure base64 string has correct padding."""
+        return data + '=' * (-len(data) % 4)
+
+    @staticmethod
+    def decrypt_data(encrypted_data: str) -> str:
+        private_key = RSAEncryption.load_private_key()
+        # Fix base64 padding before decoding
+        encrypted_data = RSAEncryption.fix_base64_padding(encrypted_data)
+        encrypted_data_bytes = base64.b64decode(encrypted_data)
+        decrypted_data = private_key.decrypt(
+            encrypted_data_bytes,
             padding.OAEP(
                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
                 algorithm=hashes.SHA256(),
                 label=None
             )
         )
-        return decrypted.decode('utf-8')
+        return decrypted_data.decode('utf-8')

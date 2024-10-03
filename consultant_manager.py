@@ -21,14 +21,14 @@ class ConsultantManager(BaseUsers):
         try:
             # Encrypt the password before storing it
             encrypted_username = self.encryption.encrypt_data(username)
-            encrypted_password = self.encryption.encrypt_data(password)
+            
 
             sql = 'INSERT INTO consultants (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
             sql2 = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
 
             # Assuming the username does not need encryption in this case, if needed adjust accordingly
-            self.cursor.execute(sql, (encrypted_username, encrypted_password, first_name, last_name, registration_date, role))
-            self.cursor.execute(sql2, (encrypted_username, encrypted_password, first_name, last_name, registration_date, role))
+            self.cursor.execute(sql, (encrypted_username, password, first_name, last_name, registration_date, role))
+            self.cursor.execute(sql2, (encrypted_username, password, first_name, last_name, registration_date, role))
             self.conn.commit()
 
             self.log_manager.log_activity(f"Registered consultant {username}", "Successful")
