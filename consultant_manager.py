@@ -35,3 +35,8 @@ class ConsultantManager(BaseUsers):
         except sqlite3.IntegrityError:
             self.log_manager.log_activity(f"Failed to register consultant {username}", "IntegrityError")
 
+    def clear_console(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        
+

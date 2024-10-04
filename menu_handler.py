@@ -63,7 +63,7 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        print("Editing consultant (feature to be implemented)")
+                        self.user_manager.edit_user()
                     elif option == '3':
                         print("Deleting consultant (feature to be implemented)")
                     elif option == '4':
@@ -86,7 +86,7 @@ class MenuHandler:
                     if option == '1':
                         self.systemadmin_manager.register_SA()
                     elif option == '2':
-                        print("Editing system admin (feature to be implemented)")
+                        self.user_manager.edit_user("system_admins")
                     elif option == '3':
                         print("Deleting system admin (feature to be implemented)")
                     elif option == '4':
@@ -102,7 +102,7 @@ class MenuHandler:
                 print("3. Back")
                 option = input("Choose an option: ")
                 if option == '1':
-                    self.user_manager.create_backup();
+                    self.user_manager.create_backup()
                 elif option == '2':
                     print("Restoring backup (feature to be implemented)")
                 elif option == '3':
@@ -162,7 +162,7 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        print("Editing consultant (feature to be implemented)")
+                        self.user_manager.edit_user("consultants")
                     elif option == '3':
                         print("Deleting consultant (feature to be implemented)")
                     elif option == '4':
