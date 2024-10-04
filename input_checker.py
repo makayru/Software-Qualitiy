@@ -121,3 +121,11 @@ def validate_password_input(prompt):
                 print(error)
         
         errors.clear()
+
+def validate_role_input(prompt):
+    while True:
+        role = input(prompt)
+        if role in ['Consultant', 'SystemAdmin']:
+            return role
+        else:
+            print("Invalid input. Please enter a valid role.")
