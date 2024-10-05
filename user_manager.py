@@ -112,7 +112,7 @@ class UserManager:
         ]
 
         for username, password, role in default_accounts:
-            self.cursor.execute('SELECT COUNT(*) FROM users WHERE username = ?', (username,))
+            self.cursor.execute('SELECT COUNT(*) FROM users WHERE role = ?', ("Super_Administrator",))
             if self.cursor.fetchone()[0] == 0:
                 self.cursor.execute('INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)',
                                     (username, password,"", "", "", role))
@@ -265,3 +265,47 @@ class UserManager:
         if field_updated:
             if input("Do you want to edit anything else for this user? (yes/no): ").strip().lower() != 'yes':
                 return
+    
+    def remove_user(self, table_name):
+        while True:
+            self.clear_console()
+
+            search_key = input(f"Enter search keyword (username, firstname, last name) for {table_name}: ").strip()
+            results = self.search_users_query(search_key, table_name)
+
+            if len(results) > 10:
+                print("More than 10 users found. Please refine your search.")
+            elif len(results) == 0:
+                print("No matching user found.")
+            else:
+                selected_user = self.select_user_from_results(results)
+                if selected_user:
+                    self.remove_user_details(selected_user, table_name)
+
+            if input(f"Do you want to remove anything else for {table_name}? (yes/no): ").strip().lower() != 'yes':
+                break
+    
+    def remove_user_details(self, selected_user, table_name):
+        user_id = selected_user[0]
+        self.clear_console()
+        print(f"Removing user ID {user_id} from {table_name}:")
+        print("-----------------------------")
+        print(f"Username: {self.encryption.decrypt_data(selected_user[1])}")
+        print(f"First Name: {selected_user[3]}")
+        print(f"Last Name: {selected_user[4]}")
+        print(f"Registration Date: {selected_user[5]}")
+        print(f"Role: {selected_user[6]}")
+        print("-----------------------------")
+
+        confirm = input("Are you sure you want to remove this user? (yes/no): ").strip().lower()
+        if confirm == 'yes':
+            sql_delete = f'DELETE FROM {table_name} WHERE id = ?'
+            self.cursor.execute(sql_delete, (user_id,))
+            sql_delete2 = 'DELETE FROM users WHERE username = ?'
+            self.cursor.execute(sql_delete2, (selected_user[1],))
+            self.conn.commit()
+            self.logger.log_activity(f"Removed user {user_id} from {table_name}", "Successful")
+            print("User removed successfully.")
+        else:
+            print("User removal canceled.")
+        
