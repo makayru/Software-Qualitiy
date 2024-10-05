@@ -42,7 +42,7 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        print("Deleting member (feature to be implemented)")
+                        self.member_manager.remove_member()
                     elif option == '4':
                         self.member_manager.view_members()
                     elif option == '5':
@@ -65,7 +65,7 @@ class MenuHandler:
                     elif option == '2':
                         self.user_manager.edit_user()
                     elif option == '3':
-                        print("Deleting consultant (feature to be implemented)")
+                        self.user_manager.remove_user("consultants")
                     elif option == '4':
                         print("Resetting consultant password (feature to be implemented)")
                     elif option == '5':
@@ -88,7 +88,7 @@ class MenuHandler:
                     elif option == '2':
                         self.user_manager.edit_user("system_admins")
                     elif option == '3':
-                        print("Deleting system admin (feature to be implemented)")
+                        self.user_manager.remove_user("system_admins")
                     elif option == '4':
                         print("Resetting system admin password (feature to be implemented)")
                     elif option == '5':
@@ -141,7 +141,7 @@ class MenuHandler:
                     elif option == '2':
                         self.member_manager.edit_member()
                     elif option == '3':
-                        self.member_manager.delete_member()
+                        self.member_manager.remove_member()
                     elif option == '4':
                         self.member_manager.view_members()
                     elif option == '5':
@@ -164,7 +164,7 @@ class MenuHandler:
                     elif option == '2':
                         self.user_manager.edit_user("consultants")
                     elif option == '3':
-                        print("Deleting consultant (feature to be implemented)")
+                        self.user_manager.remove_user("consultants")
                     elif option == '4':
                         print("Resetting consultant password (feature to be implemented)")
                     elif option == '5':
