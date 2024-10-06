@@ -68,7 +68,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
-                        ic.reset_password_Consultant()
+                        self.consultant_manager.temp_password_Con()
                     elif option == '5':
                         break
                     else:
@@ -91,7 +91,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("system_admins")
                     elif option == '4':
-                        ic.reset_password_SystemAdmin()
+                        self.systemadmin_manager.temp_password_SA()
                     elif option == '5':
                         break
                     else:
@@ -167,7 +167,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
-                        ic.reset_password_Consultant()
+                        self.consultant_manager.temp_password_Con()
                     elif option == '5':
                         break
                     else:

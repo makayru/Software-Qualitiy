@@ -158,8 +158,7 @@ def reset_password(username):
     input("\nThis is a temporary password. Please change it after logging in. Press Enter to continue...")
     return RSAEncryption().hash_data(temp_password)
 
-def reset_password_Consultant():
-    username = input("Enter username: ")
+def reset_password_Consultant(username):
     conn = connect_db()
     cursor = conn.cursor()
 
@@ -173,14 +172,15 @@ def reset_password_Consultant():
         cursor.execute(sql2, (hashed_passw, rowiduser))
         conn.commit()
         input("Password reset successful. Press Enter to return...")
-        
+        conn.close()
+        return True
     else:
         input("Username not found. Password reset failed. Press Enter to return...")
+        conn.close()
+        return False
 
-    conn.close()
 
-def reset_password_SystemAdmin():
-    username = input("Enter username: ")
+def reset_password_SystemAdmin(username):
     conn = connect_db()
     cursor = conn.cursor()
 
@@ -194,7 +194,10 @@ def reset_password_SystemAdmin():
         cursor.execute(sql2, (hashed_passw, rowiduser))
         conn.commit()
         input("Password reset successful. Press Enter to return...")
+        conn.close()
+        return True
     else:
         input("Username not found. Password reset failed. Press enter to return...")
-
-    conn.close()
+        conn.close()
+        return False
+    

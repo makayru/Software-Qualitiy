@@ -80,3 +80,13 @@ class SystemAdminManager(BaseUsers):
                 print(f"Registration Date: {registration_date}")
                 print(f"Role: {role}")
                 print("-" * 20)
+    
+    def temp_password_SA(self):
+        username = input ("Enter username: ")
+        result = ic.reset_password_SystemAdmin(username)
+        if result:
+            self.log_manager.log_activity(f"Reset password for System Admin {username}", "Successful")
+        else:
+            self.log_manager.log_activity(f"Failed to reset password for System Admin {username}", "Failed")
+
+        
