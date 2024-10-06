@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 import input_checker as ic
 import sqlite3
+import encryption as enc
 
 class MemberManager:
 
@@ -12,6 +13,7 @@ class MemberManager:
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
         self.log_manager = log_manager
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
+        self.encryption = enc.RSAEncryption()
 
     def register_member(self):
         member_id = self.generate_membership_id()
@@ -24,9 +26,14 @@ class MemberManager:
         email = ic.get_valid_email_input("Enter email: ")
         phone = ic.get_valid_phone_input("Enter phone (8 digits): ")
 
+        encrypt_email = self.encryption.encrypt_data(email)
+        encrypt_phone = self.encryption.encrypt_data(phone)
+        encrypt_address = self.encryption.encrypt_data(address)
+
+
         sql = 'INSERT INTO members (member_id, firstname, lastname, gender, age, weight, address, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
         try:
-            self.cursor.execute(sql, (member_id, firstname, lastname, gender, age, weight, address, email, phone))
+            self.cursor.execute(sql, (member_id, firstname, lastname, gender, age, weight, encrypt_address, encrypt_email, encrypt_phone))
             self.conn.commit()
             print(f"Member {firstname} {lastname} registered successfully. Member ID: {member_id}")
             self.log_manager.log_activity(f"Registered member {firstname} {lastname}", "Successful")
@@ -171,10 +178,10 @@ class MemberManager:
             print(f"3. Age: {selected_member[3]}")
             print(f"4. Gender: {selected_member[4]}")
             print(f"5. Weight: {selected_member[5]}")
-            print(f"6. Address: {selected_member[6]}")
-            print(f"7. Email: {selected_member[7]}")
+            print(f"6. Address: {self.encryption.decrypt_data(selected_member[6])}")
+            print(f"7. Email: {self.encryption.decrypt_data(selected_member[7])}")
             if len(selected_member) > 8:
-                print(f"8. Phone: {selected_member[8]}")
+                print(f"8. Phone: {self.encryption.decrypt_data(selected_member[8])}")
             print("-----------------------------")
 
             field_choice = input("Enter the number of the field to edit (or '0' to finish editing this member): ").strip()
