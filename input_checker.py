@@ -1,7 +1,12 @@
 import re
 import sqlite3
+import random
 import member_manager as MemberManager
 from encryption import RSAEncryption
+
+from StaticMethods import StaticMethods as SM 
+
+
 
 cities = ["Amsterdam", "Rotterdam", "Utrecht", "The Hague", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Delft", "Breda"]
 def get_valid_int_input(prompt):
@@ -73,14 +78,9 @@ def validate_and_get_unique_username(prompt):
         if not re.match(r'^[a-zA-Z_][a-zA-Z0-9\'._]*$', username):
             errors.append("Username can only start with a letter or underscore, and can contain letters, numbers, underscores, apostrophes, and periods.")
         
-        if not errors: 
-            conn = connect_db()
-            cursor = conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM users WHERE username = ?", (username,))
-            count = cursor.fetchone()[0]
-            conn.close()
-
-            if count == 0:
+        if not errors:
+            rowid = SM.GetRowIDUsers(connect_db().cursor(), username)
+            if rowid == None:
                 print("Username is valid and unique.")
                 return username
             else:
@@ -129,3 +129,72 @@ def validate_role_input(prompt):
             return role
         else:
             print("Invalid input. Please enter a valid role.")
+
+def generate_temp_password():
+    length = 12
+
+    lowercase = 'abcdefghijklmnopqrstuvwxyz'
+    uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    digits = '0123456789'
+    special_characters = '!@#$%^&*(),.?":{}|<>'
+
+    password_chars = [
+        random.choice(lowercase),          # Add a random lowercase letter
+        random.choice(uppercase),          # Add a random uppercase letter
+        random.choice(digits),             # Add a random digit
+        random.choice(special_characters)  # Add a random special character
+    ]
+
+    all_characters = lowercase + uppercase + digits + special_characters
+    password_chars += random.choices(all_characters, k=length-4) #fill the rest of the password with random characters
+
+    random.shuffle(password_chars)
+    
+    return ''.join(password_chars)
+
+def reset_password(username):
+    temp_password = generate_temp_password()
+    print(f"Temporary password for {username}: {temp_password}")
+    input("\nThis is a temporary password. Please change it after logging in. Press Enter to continue...")
+    return RSAEncryption().hash_data(temp_password)
+
+def reset_password_Consultant():
+    username = input("Enter username: ")
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    rowiduser = SM.GetRowIDUsers(cursor, username)
+    rowidcon = SM.GetRowIDRole(cursor, username, 'consultants')
+    if rowiduser != None and rowidcon != None: 
+        hashed_passw = reset_password(username)
+        sql = 'UPDATE consultants SET password = ? WHERE rowid = ?'
+        sql2 = 'UPDATE users SET password = ? WHERE rowid = ?'
+        cursor.execute(sql, (hashed_passw, rowidcon))
+        cursor.execute(sql2, (hashed_passw, rowiduser))
+        conn.commit()
+        input("Password reset successful. Press Enter to return...")
+        
+    else:
+        input("Username not found. Password reset failed. Press Enter to return...")
+
+    conn.close()
+
+def reset_password_SystemAdmin():
+    username = input("Enter username: ")
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    rowiduser = SM.GetRowIDUsers(cursor, username)
+    rowidSA = SM.GetRowIDRole(cursor, username, 'system_admins')
+    if rowiduser != None and rowidSA != None:
+        hashed_passw = reset_password(username)
+        sql = 'UPDATE system_admins SET password = ? WHERE rowid = ?'
+        sql2 = 'UPDATE users SET password = ? WHERE rowid = ?'
+        cursor.execute(sql, (hashed_passw, rowidSA))
+        cursor.execute(sql2, (hashed_passw, rowiduser))
+        conn.commit()
+        input("Password reset successful. Press Enter to return...")
+    else:
+        input("Username not found. Password reset failed. Press enter to return...")
+
+    conn.close()
