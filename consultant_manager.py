@@ -38,5 +38,14 @@ class ConsultantManager(BaseUsers):
     def clear_console(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
+    def temp_password_Con(self):
+        username = input ("Enter username: ")
+        result = ic.reset_password_Consultant(username)
+        if result:
+            self.log_manager.log_activity(f"Reset password for Consultant {username}", "Successful")
+        else:
+            self.log_manager.log_activity(f"Failed to reset password for Consultant {username}", "Failed")
+
+        
         
 

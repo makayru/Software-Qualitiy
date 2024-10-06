@@ -1,4 +1,5 @@
 from getpass import getpass
+import input_checker as ic
 from menus import super_admin_menu, system_admin_menu, consultant_menu, default_menu
 import os
 
@@ -24,7 +25,7 @@ class MenuHandler:
             os.system('cls')
             option = super_admin_menu()
             if option == '1':
-                print("Updating password (feature to be implemented)")
+                self.systemadmin_manager.update_password()
             elif option == '2':
                 self.user_manager.view_users()
             elif option == '3':
@@ -67,7 +68,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
-                        print("Resetting consultant password (feature to be implemented)")
+                        self.consultant_manager.temp_password_Con()
                     elif option == '5':
                         break
                     else:
@@ -90,7 +91,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("system_admins")
                     elif option == '4':
-                        print("Resetting system admin password (feature to be implemented)")
+                        self.systemadmin_manager.temp_password_SA()
                     elif option == '5':
                         break
                     else:
@@ -165,7 +166,7 @@ class MenuHandler:
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
-                        print("Resetting consultant password (feature to be implemented)")
+                        self.consultant_manager.temp_password_Con()
                     elif option == '5':
                         break
                     else:
