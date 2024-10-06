@@ -26,7 +26,7 @@ class MenuHandler:
             if option == '1':
                 print("Updating password (feature to be implemented)")
             elif option == '2':
-                print("Viewing users (feature to be implemented)")
+                self.user_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
@@ -125,7 +125,7 @@ class MenuHandler:
             if option == '1':
                 self.systemadmin_manager.update_password()
             elif option == '2':
-                self.systemadmin_manager.view_users()
+                self.user_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
