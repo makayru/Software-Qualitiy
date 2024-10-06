@@ -2,6 +2,7 @@ from getpass import getpass
 import input_checker as ic
 from menus import super_admin_menu, system_admin_menu, consultant_menu, default_menu
 import os
+from logger import LoggerDatabaseManager as Logger
 
 class MenuHandler:
     def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager):
@@ -9,6 +10,7 @@ class MenuHandler:
         self.member_manager = member_manager
         self.consultant_manager = consultant_manager
         self.systemadmin_manager = systemadmin_manager
+        self.logger = Logger()
 
     def display_role_based_menu(self, role):
         if role == 'Super_Administrator':
@@ -109,7 +111,7 @@ class MenuHandler:
                 elif option == '3':
                     break
             elif option == '7':
-                print("Viewing logs (feature to be implemented)")
+                self.logger.view_logs()
             elif option == '8':
                 self.member_manager.search_members()
 
@@ -183,7 +185,7 @@ class MenuHandler:
                 elif option == '3':
                     break
             elif option == '6':
-                print("Viewing logs (feature to be implemented)")
+                self.logger.view_logs()
             elif option == '7':
                 self.member_manager.search_members()
             elif option == '8':

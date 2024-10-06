@@ -93,7 +93,7 @@ class UserManager:
             
             if decrypted_username == username and stored_password == hashed_input_password:
                 self.current_user = username
-                print(f"Authentication successful. Role: {role}")
+                input(f"Authentication successful. Press Enter to continue and please wait till your screen is loaded...")
                 self.logger.log_activity('login attempt', 'Successful')
                 return role
         
@@ -117,10 +117,8 @@ class UserManager:
                 self.cursor.execute('INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)',
                                     (username, password,"", "", "", role))
                 self.conn.commit()
-                print(f"Account {username} with role {role} inserted successfully.")
                 self.logger.log_activity("insert default account", "Successful")
             else:
-                print(f"Account {username} already exists.")
                 self.logger.log_activity( "insert default account", "Failed: Already exists")
 
     def create_backup(self):
