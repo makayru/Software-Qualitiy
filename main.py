@@ -8,6 +8,7 @@ from menu_handler import MenuHandler
 from logger import LoggerDatabaseManager
 import time
 
+
 class Application:
     def __init__(self):
         self.logger = LoggerDatabaseManager()
@@ -21,6 +22,7 @@ class Application:
         self.failed_attempts = 0
 
     def run(self):
+
         while True:
             option = main_menu()
             if option == '1':
@@ -28,7 +30,7 @@ class Application:
                 password = getpass("Enter password: ")
                 role = self.user_manager.authenticate_user(username, password)
                 if role:
-                    self.logger.set_current_user(username)
+                    self.logger.set_current_user(username, role)
                     self.logger.log_activity("login attempt", "Successful")
                     self.menu_handler.display_role_based_menu(role)
                     self.failed_attempts = 0
@@ -36,6 +38,7 @@ class Application:
                     self.logger.log_activity(f"{username} login attempt", "Failed")
                     self.failed_attempts += 1
                     if self.failed_attempts >= self.max_login_attempts:
+                        self.logger.log_activity(f"{username} login attempt", "Failed login in 3 times",suspicious="Yes")
                         print(f"Maximum login attempts reached. Please wait for {self.wait_time_seconds} seconds.")
                         time.sleep(self.wait_time_seconds)
                         self.failed_attempts = 0

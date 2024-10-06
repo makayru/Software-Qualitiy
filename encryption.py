@@ -35,6 +35,7 @@ class RSAEncryption:
 
     @staticmethod
     def encrypt_data(data: str) -> str:
+        data = RSAEncryption.safe_encrypt(data)
         public_key = RSAEncryption.load_public_key()
         encrypted_data = public_key.encrypt(
             data.encode('utf-8'),
@@ -66,3 +67,10 @@ class RSAEncryption:
             )
         )
         return decrypted_data.decode('utf-8')
+
+    def safe_encrypt(data):
+        if data is None:
+            data = 'None'  # Or any other default value
+            return data
+        
+        return data
