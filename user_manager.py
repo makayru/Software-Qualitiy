@@ -308,4 +308,48 @@ class UserManager:
             print("User removed successfully.")
         else:
             print("User removal canceled.")
+    
+
+    def view_users(self):
+        while True:
+            self.clear_console()
+            print("View Users")
+            print("1. View Members")
+            print("2. View Consultants")
+            print("3. View System Admins")
+            print("4. Back")
+            option = input("Choose an option: ").strip()
+
+            if option == '1':
+                self.view_table('members')
+            elif option == '2':
+                self.view_table('consultants')
+            elif option == '3':
+                self.view_table('system_admins')
+            elif option == '4':
+                break
+            else:
+                print("Invalid choice. Please try again.")
+    
+    def view_table(self, table_name):
+        self.clear_console()
+        print(f"Viewing {table_name}:")
+        print("-----------------------------")
+        sql = f'SELECT * FROM {table_name}'
+        self.cursor.execute(sql)
+        results = self.cursor.fetchall()
+    
+        if table_name == 'members':
+            for row in results:
+                id, member_id, firstname, lastname, age, gender , weight, address, email, phone = row
+                print(f"First Name: {firstname}, Last Name: {lastname}, Age: {age}, Gender: {gender}, Weight: {weight}, Address: {self.encryption.decrypt_data(address)}, Email: {self.encryption.decrypt_data(email)}, Phone: {self.encryption.decrypt_data(phone)}")
         
+        elif table_name == 'consultants' or table_name == 'system_admins':
+            for row in results:
+                id, username, password, first_name, last_name, registration_date, role = row
+                print(f"Username: {self.encryption.decrypt_data(username)}, Full Name: {first_name} {last_name}, Registration Date: {registration_date}, Role: {role}")
+            
+        
+    
+        print("-----------------------------")
+        input("Press Enter to continue...")

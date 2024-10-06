@@ -27,7 +27,7 @@ class MenuHandler:
             if option == '1':
                 self.systemadmin_manager.update_password()
             elif option == '2':
-                print("Viewing users (feature to be implemented)")
+                self.user_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
@@ -64,7 +64,7 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        self.user_manager.edit_user()
+                        self.user_manager.edit_user("consultants")
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
@@ -111,8 +111,7 @@ class MenuHandler:
             elif option == '7':
                 print("Viewing logs (feature to be implemented)")
             elif option == '8':
-                search_key = input("Enter search key: ")
-                self.member_manager.search_members(search_key)
+                self.member_manager.search_members()
 
             elif option == '9':
                 break
@@ -126,7 +125,7 @@ class MenuHandler:
             if option == '1':
                 self.systemadmin_manager.update_password()
             elif option == '2':
-                self.systemadmin_manager.view_users()
+                self.user_manager.view_users()
             elif option == '3':
                 while True:
                     self.clear_console()
@@ -186,8 +185,7 @@ class MenuHandler:
             elif option == '6':
                 print("Viewing logs (feature to be implemented)")
             elif option == '7':
-                search_key = input("Enter search key: ")
-                self.member_manager.search_members(search_key)
+                self.member_manager.search_members()
             elif option == '8':
                 break
             else:
@@ -204,8 +202,7 @@ class MenuHandler:
             elif option == '3':
                 self.member_manager.edit_member()
             elif option == '4':
-                search_key = input("Enter search key: ")
-                self.member_manager.search_members(search_key)
+                self.member_manager.search_members()
             elif option == '5':
                 break
             else:
