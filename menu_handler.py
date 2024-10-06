@@ -63,7 +63,7 @@ class MenuHandler:
                     if option == '1':
                         self.consultant_manager.register_consultant()
                     elif option == '2':
-                        self.user_manager.edit_user()
+                        self.user_manager.edit_user("consultants")
                     elif option == '3':
                         self.user_manager.remove_user("consultants")
                     elif option == '4':
