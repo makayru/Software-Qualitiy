@@ -63,7 +63,8 @@ class MemberManager:
         membership_id = partial_id + str(checksum)
         return membership_id
     
-    def search_members_querry(self, search_key):
+    def search_members_querry(self):
+        search_key = input("Enter search keyword (member ID, first name, last name, etc.): ").strip()
         search_key = f"%{search_key}%"
         sql = '''SELECT member_id, firstname, lastname, age, gender, weight, address, email, phone 
                  FROM members 
@@ -80,23 +81,29 @@ class MemberManager:
         results = self.cursor.fetchall()
         self.conn.commit()
         return results
-    
-    def search_members(self, search_key1):
-        results = self.search_members_querry(search_key1)
+
+    def search_members(self):      
+        results = self.search_members_querry()
         if results:
+            self.clear_console()
             print("Search Results:")
             for row in results:
                 member_id, firstname, lastname, age, gender, weight, address, email, phone = row
+
+                decrypted_address = self.encryption.decrypt_data(address)
+                decrypted_email = self.encryption.decrypt_data(email)
+                decrypted_phone = self.encryption.decrypt_data(phone)
+
                 print(f"ID: {member_id}, Name: {firstname} {lastname}, Age: {age}, Gender: {gender}, Weight: {weight}")
-                print(f"Address: {address}")
-                print(f"Email: {email}, Phone: {phone}")
+                print(f"Address: {decrypted_address}")
+                print(f"Email: {decrypted_email}, Phone: {decrypted_phone}")
                 print("-" * 20)
         else:
             print("No matching members found.")
-            
-        input("Press any key to continue...")
-        os.system('cls' if os.name == 'nt' else 'clear') 
 
+        input("Press any key to continue...")
+        os.system('cls' if os.name == 'nt' else 'clear')
+    
     def clear_console(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
