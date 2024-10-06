@@ -40,7 +40,7 @@ class ConsultantManager(BaseUsers):
 
     def temp_password_Con(self):
         username = input ("Enter username: ")
-        result = ic.reset_password_SystemAdmin(username)
+        result = ic.reset_password_Consultant(username)
         if result:
             self.log_manager.log_activity(f"Reset password for Consultant {username}", "Successful")
         else:
