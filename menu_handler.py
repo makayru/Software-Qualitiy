@@ -47,7 +47,7 @@ class MenuHandler:
                     elif option == '3':
                         self.member_manager.remove_member()
                     elif option == '4':
-                        self.member_manager.view_members()
+                        self.user_manager.view_table('members')
                     elif option == '5':
                         break
                     else:
@@ -145,7 +145,7 @@ class MenuHandler:
                     elif option == '3':
                         self.member_manager.remove_member()
                     elif option == '4':
-                        self.member_manager.view_members()
+                        self.user_manager.view_table('members')
                     elif option == '5':
                         break
                     else:

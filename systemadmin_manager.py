@@ -19,19 +19,29 @@ class SystemAdminManager(BaseUsers):
         lastname = ic.validate_fname_or_lname_input("Enter last name: ")
         role = 'SystemAdmin'
         registration_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        encrypted_username = self.encryption.encrypt_data(username)
-
-
-        sql = 'INSERT INTO system_admins (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'   
-        sql2 = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
+    
         try:
-            self.cursor.execute(sql, (encrypted_username, password,firstname, lastname, registration_date , role))
-            self.cursor.execute(sql2, (encrypted_username, password, firstname, lastname, registration_date, role))
+            # Encrypt the username and password before storing them
+            encrypted_username = self.encryption.encrypt_data(username)
+            encrypted_password = self.encryption.hash_data(password)
+    
+            # Step 1: Insert into the users table first and get the user_id
+            sql_users = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
+            self.cursor.execute(sql_users, (encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
+            user_id = self.cursor.lastrowid  # Get the user_id from the users table
+    
+            # Step 2: Insert into the system_admins table using the user_id
+            sql_system_admins = 'INSERT INTO system_admins (user_id, username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?, ?)'
+            self.cursor.execute(sql_system_admins, (user_id, encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
+    
             self.conn.commit()
+    
             self.log_manager.log_activity(f"Registered system admin {username}", "Successful")
+            print(f"System Admin {username} registered successfully.")
         except sqlite3.IntegrityError:
             self.log_manager.log_activity(f"Failed to register system admin {username}", "IntegrityError")
+            print(f"Failed to register system admin {username}. Integrity Error.")
+    
 
     def fetch_users(self):
         sql_select = 'SELECT username, first_name, last_name, registration_date, role FROM users'
