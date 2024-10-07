@@ -117,9 +117,7 @@ class MemberManager:
     def edit_member(self):
             while True:
                 self.clear_console()
-
-                search_key = input("Enter search keyword (member ID, first name, last name, etc.): ").strip()
-                results = self.search_members_querry(search_key)
+                results = self.search_members_querry()
 
                 if len(results) > 10:
                     print("More than 10 members found. Please refine your search.")
@@ -215,13 +213,13 @@ class MemberManager:
                     new_value = ic.get_valid_int_input("Enter new weight: ")
                     field_name = 'weight'
                 elif field_choice == '6':
-                    new_value = input("Enter new address: ").strip()
+                    new_value = self.encryption.encrypt_data(self.address_input())
                     field_name = 'address'
                 elif field_choice == '7':
-                    new_value = ic.get_valid_email_input("Enter new email: ")
+                    new_value = self.encryption.encrypt_data(ic.get_valid_email_input("Enter new email: "))
                     field_name = 'email'
                 elif field_choice == '8':
-                    new_value = ic.get_valid_phone_input("Enter new phone number: ")
+                    new_value = self.encryption.encrypt_data(ic.get_valid_phone_input("Enter new phone number: "))
                     field_name = 'phone'
 
                 if new_value is not None and field_name is not None:
