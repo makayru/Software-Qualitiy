@@ -135,8 +135,7 @@ class MemberManager:
         while True:
             self.clear_console()
 
-            search_key = input("Enter search keyword (member ID, first name, last name, etc.): ").strip()
-            results = self.search_members_querry(search_key)
+            results = self.search_members_querry()
 
             if len(results) > 10:
                 print("More than 10 members found. Please refine your search.")

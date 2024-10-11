@@ -298,11 +298,11 @@ class UserManager:
         self.clear_console()
         print(f"Removing user ID {user_id} from {table_name}:")
         print("-----------------------------")
-        print(f"Username: {self.encryption.decrypt_data(selected_user[1])}")
-        print(f"First Name: {selected_user[3]}")
-        print(f"Last Name: {selected_user[4]}")
-        print(f"Registration Date: {selected_user[5]}")
-        print(f"Role: {selected_user[6]}")
+        print(f"1. Username: {self.encryption.decrypt_data(selected_user[2])}")  
+        print(f"2. First Name: {selected_user[4]}")
+        print(f"3. Last Name: {selected_user[5]}")
+        print(f"4. Registration Date: {selected_user[6]}")
+        print(f"5. Role: {selected_user[7]}")
         print("-----------------------------")
 
         confirm = input("Are you sure you want to remove this user? (yes/no): ").strip().lower()
@@ -354,7 +354,7 @@ class UserManager:
         
         elif table_name == 'consultants' or table_name == 'system_admins':
             for row in results:
-                id, username, password, first_name, last_name, registration_date, role = row
+                id, user_id, username, password, first_name, last_name, registration_date, role = row
                 print(f"Username: {self.encryption.decrypt_data(username)}, Full Name: {first_name} {last_name}, Registration Date: {registration_date}, Role: {role}")
             
         
