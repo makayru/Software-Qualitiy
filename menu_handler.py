@@ -105,11 +105,11 @@ class MenuHandler:
                 print("3. Back")
                 option = input("Choose an option: ")
                 if option == '1':
-                    self.user_manager.create_backup()
+                    self.systemadmin_manager.create_backup(False)
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    self.systemadmin_manager.restore_backup()
                 elif option == '3':
-                    break
+                    return
             elif option == '7':
                 self.logger.view_logs()
             elif option == '8':
@@ -179,9 +179,9 @@ class MenuHandler:
                 print("3. Back")
                 option = input("Choose an option: ")
                 if option == '1':
-                    self.user_manager.create_backup()
+                    self.systemadmin_manager.create_backup(False)
                 elif option == '2':
-                    print("Restoring backup (feature to be implemented)")
+                    self.systemadmin_manager.restore_backup()
                 elif option == '3':
                     break
             elif option == '6':
