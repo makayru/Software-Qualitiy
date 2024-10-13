@@ -6,7 +6,7 @@ import base64
 import hashlib
 
 class RSAEncryption:
-    # Hard-coded paths for the keys (Update these with your actual paths)
+    # Hard-coded paths for the keys
     PUBLIC_KEY_PATH = 'public_key.pem'
     PRIVATE_KEY_PATH = 'private_key.pem'
 
@@ -70,7 +70,7 @@ class RSAEncryption:
 
     def safe_encrypt(data):
         if data is None:
-            data = 'None'  # Or any other default value
+            data = 'None'
             return data
         
         return data

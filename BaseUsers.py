@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime
+
 import input_checker as ic
 from encryption import RSAEncryption
 from StaticMethods import StaticMethods as SM 
@@ -20,7 +20,7 @@ class BaseUsers:
                 decrypted_username = RSAEncryption.decrypt_data(encrypted_username)
             except Exception as e:
                 print(f"Decryption failed: {str(e)}")
-                continue  # Skip this entry if decryption fails
+                continue
             
             if decrypted_username == username:
                 return role

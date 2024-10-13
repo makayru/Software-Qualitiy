@@ -24,16 +24,13 @@ class SystemAdminManager(BaseUsers):
         registration_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
         try:
-            # Encrypt the username and password before storing them
             encrypted_username = self.encryption.encrypt_data(username)
             encrypted_password = self.encryption.hash_data(password)
     
-            # Step 1: Insert into the users table first and get the user_id
             sql_users = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
             self.cursor.execute(sql_users, (encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
-            user_id = self.cursor.lastrowid  # Get the user_id from the users table
+            user_id = self.cursor.lastrowid 
     
-            # Step 2: Insert into the system_admins table using the user_id
             sql_system_admins = 'INSERT INTO system_admins (user_id, username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?, ?)'
             self.cursor.execute(sql_system_admins, (user_id, encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
     
@@ -111,9 +108,9 @@ class SystemAdminManager(BaseUsers):
             os.makedirs(backup_dir)
         
         if backup_restore == False:
-            backup_name = datetime.now().strftime("backup_%Y%m%d_%H%M%S.zip")
+            backup_name = datetime.now().strftime("backup_%Y-%m-%d_%H-%M-%S.zip")
         else:
-            backup_name = datetime.now().strftime("backup_before_restoring_%Y%m%d_%H%M%S.zip")
+            backup_name = datetime.now().strftime("backup_before_restoring_%Y-%m-%d_%H-%M-%S.zip")
         
         backup_path = os.path.join(backup_dir, backup_name)
         
