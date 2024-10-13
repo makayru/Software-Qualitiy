@@ -19,15 +19,12 @@ class ConsultantManager(BaseUsers):
         role = 'Consultant'
 
         try:
-            # Encrypt the password and username before storing them
             encrypted_username = self.encryption.encrypt_data(username)
     
-            # Step 1: Insert into the users table first and get the user_id
             sql_users = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
             self.cursor.execute(sql_users, (encrypted_username, password, first_name, last_name, registration_date, role))
-            user_id = self.cursor.lastrowid  # Get the user_id from the users table
+            user_id = self.cursor.lastrowid
 
-            # Step 2: Insert into the consultants table using the user_id
             sql_consultants = 'INSERT INTO consultants (user_id, username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?, ?)'
             self.cursor.execute(sql_consultants, (user_id, encrypted_username, password, first_name, last_name, registration_date, role))
 

@@ -1,7 +1,5 @@
-# user_manager.py
 import sqlite3
 import datetime
-import logger as log
 import os
 import zipfile
 import encryption as enc

@@ -12,7 +12,7 @@ class StaticMethods:
                 decrypted_username = RSAEncryption.decrypt_data(encrypted_username)
             except Exception as e:
                 print(f"Decryption failed: {str(e)}")
-                continue  # Skip this entry if decryption fails
+                continue
             
             if decrypted_username == username:
                 return role
@@ -29,7 +29,7 @@ class StaticMethods:
                 decrypted_username = RSAEncryption.decrypt_data(encrypted_username)
             except Exception as e:
                 print(f"Decryption failed: {str(e)}")
-                continue  # Skip this entry if decryption fails
+                continue 
             if decrypted_username == username:
                 return rowid
             

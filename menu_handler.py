@@ -1,8 +1,7 @@
-from getpass import getpass
-import input_checker as ic
 from menus import super_admin_menu, system_admin_menu, consultant_menu, default_menu
 import os
 from logger import LoggerDatabaseManager as Logger
+from Display import backup_menu
 
 class MenuHandler:
     def __init__(self, user_manager, member_manager, consultant_manager, systemadmin_manager):
@@ -100,6 +99,7 @@ class MenuHandler:
                         print("Invalid choice. Please try again.")
             elif option == '6':
                 self.clear_console()
+                print(backup_menu())
                 print("1. Create backup")
                 print("2. Restore backup")
                 print("3. Back")
@@ -109,7 +109,7 @@ class MenuHandler:
                 elif option == '2':
                     self.systemadmin_manager.restore_backup()
                 elif option == '3':
-                    return
+                    print("Invalid choice. Please try again.")
             elif option == '7':
                 self.logger.view_logs()
             elif option == '8':
@@ -174,6 +174,7 @@ class MenuHandler:
                     else:
                         print("Invalid choice. Please try again.")
             elif option == '5':
+                print(backup_menu())
                 print("1. Create backup")
                 print("2. Restore backup")
                 print("3. Back")

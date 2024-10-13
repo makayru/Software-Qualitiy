@@ -1,7 +1,6 @@
 import re
 import sqlite3
 import random
-import member_manager as MemberManager
 from encryption import RSAEncryption
 
 from StaticMethods import StaticMethods as SM 
