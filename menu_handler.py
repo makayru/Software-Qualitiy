@@ -37,7 +37,8 @@ class MenuHandler:
                     print("2. Edit member")
                     print("3. Delete member")
                     print("4. View members")
-                    print("5. Back")
+                    print("5. search members")
+                    print("6. Back")
                     option = input("Choose an option: ")
                     if option == '1':
                         self.member_manager.register_member()
@@ -48,6 +49,8 @@ class MenuHandler:
                     elif option == '4':
                         self.user_manager.view_table('members')
                     elif option == '5':
+                        self.member_manager.search_members()
+                    elif option == '6':
                         break
                     else:
                         print("Invalid choice. Please try again.")
@@ -113,9 +116,6 @@ class MenuHandler:
             elif option == '7':
                 self.logger.view_logs()
             elif option == '8':
-                self.member_manager.search_members()
-
-            elif option == '9':
                 break
             else:
                 print("Invalid choice. Please try again.")
@@ -136,7 +136,8 @@ class MenuHandler:
                     print("2. Edit member")
                     print("3. Delete member")
                     print("4. View members")
-                    print("5. Back")
+                    print("5. search members")
+                    print("6. Back")
                     option = input("Choose an option: ")
                     if option == '1':
                         self.member_manager.register_member()
@@ -147,6 +148,8 @@ class MenuHandler:
                     elif option == '4':
                         self.user_manager.view_table('members')
                     elif option == '5':
+                        self.member_manager.search_members()
+                    elif option == '6':
                         break
                     else:
                         print("Invalid choice. Please try again.")
@@ -188,8 +191,6 @@ class MenuHandler:
             elif option == '6':
                 self.logger.view_logs()
             elif option == '7':
-                self.member_manager.search_members()
-            elif option == '8':
                 break
             else:
                 print("Invalid choice. Please try again.")

@@ -18,6 +18,7 @@ def super_admin_menu():
     print("   Edit member")
     print("   Delete member")
     print("   View members")
+    print("   Search members")
     print("4. Consultant management")
     print("   Add Consultant")
     print("   Edit Consultant")
@@ -32,8 +33,7 @@ def super_admin_menu():
     print("   Create backup")
     print("   Restore backup")
     print("7. View logs")
-    print("8. Search members")
-    print("9. Exit")
+    print("8. Exit")
     return input("Choose an option: ")
 
 
@@ -48,6 +48,7 @@ def system_admin_menu():
     print("   Edit member")
     print("   Delete member")
     print("   View members")
+    print("   Search members")
     print("4. Consultant management")
     print("   Add Consultant")
     print("   Edit Consultant")
@@ -57,8 +58,7 @@ def system_admin_menu():
     print("   Create backup")
     print("   Restore backup")
     print("6. View logs")
-    print("7. Search members")
-    print("8. Exit")
+    print("7. Exit")
     return input("Choose an option: ")
 
 def consultant_menu():

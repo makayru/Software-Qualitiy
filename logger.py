@@ -55,6 +55,9 @@ class LoggerDatabaseManager:
         conn.close()
 
     def log_activity(self, activity, additional_info='', suspicious='No'):
+        # Log user activity into the database.
+        # User data and activity are encrypted before saving.
+        
         username = self.current_user
         now = datetime.datetime.now()
         query = '''INSERT INTO logs (date, time, username, activity, additional_info, suspicious, read) 
@@ -224,7 +227,7 @@ class LoggerDatabaseManager:
             if not logs:
                 print("No more logs to display.")
                 return
-            
+            # Fetch all logs from the database and decrypt them for display.
             for log in logs:
                 log_id = log[0] 
                 decrypted_date = self.encryption.decrypt_data(log[1])
@@ -235,6 +238,7 @@ class LoggerDatabaseManager:
                 decrypted_suspicious = self.encryption.decrypt_data(log[6])
                 decrypted_read = self.encryption.decrypt_data(log[7])
 
+             
                 print(f"Log ID: {log_id}, Date: {decrypted_date}, Time: {decrypted_time}, User: {decrypted_user}")
                 print(f"Activity: {decrypted_activity}, Additional Info: {decrypted_info}, Suspicious: {decrypted_suspicious}, Read: {decrypted_read}")
 
