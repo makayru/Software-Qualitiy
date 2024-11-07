@@ -25,14 +25,13 @@ class SystemAdminManager(BaseUsers):
     
         try:
             encrypted_username = self.encryption.encrypt_data(username)
-            encrypted_password = self.encryption.hash_data(password)
     
             sql_users = 'INSERT INTO users (username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?)'
-            self.cursor.execute(sql_users, (encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
+            self.cursor.execute(sql_users, (encrypted_username, password, firstname, lastname, registration_date, role))
             user_id = self.cursor.lastrowid 
     
             sql_system_admins = 'INSERT INTO system_admins (user_id, username, password, first_name, last_name, registration_date, role) VALUES (?, ?, ?, ?, ?, ?, ?)'
-            self.cursor.execute(sql_system_admins, (user_id, encrypted_username, encrypted_password, firstname, lastname, registration_date, role))
+            self.cursor.execute(sql_system_admins, (user_id, encrypted_username, password, firstname, lastname, registration_date, role))
     
             self.conn.commit()
     
